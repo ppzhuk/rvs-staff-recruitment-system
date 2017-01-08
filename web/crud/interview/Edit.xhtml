@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="InterviewEditDlg" widgetVar="InterviewEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.EditInterviewTitle}">
+            <h:form id="InterviewEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{interviewController.selected != null}">
+                        <p:outputLabel value="#{bundle.EditInterviewLabel_id}" for="id" />
+                        <p:inputText id="id" value="#{interviewController.selected.id}" title="#{bundle.EditInterviewTitle_id}" required="true" requiredMessage="#{bundle.EditInterviewRequiredMessage_id}"/>
+                        <p:outputLabel value="#{bundle.EditInterviewLabel_date}" for="date" />
+                        <p:inputText id="date" value="#{interviewController.selected.date}" title="#{bundle.EditInterviewTitle_date}" />
+                        <p:outputLabel value="#{bundle.EditInterviewLabel_employerResult}" for="employerResult" />
+                        <p:inputText id="employerResult" value="#{interviewController.selected.employerResult}" title="#{bundle.EditInterviewTitle_employerResult}" />
+                        <p:outputLabel value="#{bundle.EditInterviewLabel_applicantResult}" for="applicantResult" />
+                        <p:inputText id="applicantResult" value="#{interviewController.selected.applicantResult}" title="#{bundle.EditInterviewTitle_applicantResult}" />
+                        <p:outputLabel value="#{bundle.EditInterviewLabel_applicantId}" for="applicantId" />
+                        <p:selectOneMenu id="applicantId" value="#{interviewController.selected.applicantId}" >
+                            <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
+                            <f:selectItems value="#{applicantController.itemsAvailableSelectOne}"
+                                           var="applicantIdItem"
+                                           itemValue="#{applicantIdItem}"/>
+                        </p:selectOneMenu>
+                        <p:outputLabel value="#{bundle.EditInterviewLabel_vacancyId}" for="vacancyId" />
+                        <p:selectOneMenu id="vacancyId" value="#{interviewController.selected.vacancyId}" >
+                            <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
+                            <f:selectItems value="#{vacancyController.itemsAvailableSelectOne}"
+                                           var="vacancyIdItem"
+                                           itemValue="#{vacancyIdItem}"/>
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{interviewController.update}" value="#{bundle.Save}" update="display,:InterviewListForm:datalist,:growl" oncomplete="handleSubmit(args, 'InterviewEditDialog');"/>
+                    <p:commandButton value="#{bundle.Cancel}" onclick="InterviewEditDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="MarkCreateDlg" widgetVar="MarkCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.CreateMarkTitle}">
+            <h:form id="MarkCreateForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{markController.selected != null}">
+                        <p:outputLabel value="#{bundle.CreateMarkLabel_id}" for="id" />
+                        <p:inputText id="id" value="#{markController.selected.id}" title="#{bundle.CreateMarkTitle_id}" required="true" requiredMessage="#{bundle.CreateMarkRequiredMessage_id}"/>
+                        <p:outputLabel value="#{bundle.CreateMarkLabel_managerId}" for="managerId" />
+                        <p:inputText id="managerId" value="#{markController.selected.managerId}" title="#{bundle.CreateMarkTitle_managerId}" required="true" requiredMessage="#{bundle.CreateMarkRequiredMessage_managerId}"/>
+                        <p:outputLabel value="#{bundle.CreateMarkLabel_mark}" for="mark" />
+                        <p:inputText id="mark" value="#{markController.selected.mark}" title="#{bundle.CreateMarkTitle_mark}" required="true" requiredMessage="#{bundle.CreateMarkRequiredMessage_mark}"/>
+                        <p:outputLabel value="#{bundle.CreateMarkLabel_comment}" for="comment" />
+                        <p:inputText id="comment" value="#{markController.selected.comment}" title="#{bundle.CreateMarkTitle_comment}" />
+                        <p:outputLabel value="#{bundle.CreateMarkLabel_evaluatedPersonId}" for="evaluatedPersonId" />
+                        <p:selectOneMenu id="evaluatedPersonId" value="#{markController.selected.evaluatedPersonId}" required="true" requiredMessage="#{bundle.EditMarkRequiredMessage_evaluatedPersonId}">
+                            <f:selectItems value="#{personController.itemsAvailableSelectOne}"
+                                           var="evaluatedPersonIdItem"
+                                           itemValue="#{evaluatedPersonIdItem}"/>
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{markController.create}" value="#{bundle.Save}" update="display,:MarkListForm:datalist,:growl" oncomplete="handleSubmit(args,'MarkCreateDialog');"/>
+                    <p:commandButton value="#{bundle.Cancel}" onclick="MarkCreateDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

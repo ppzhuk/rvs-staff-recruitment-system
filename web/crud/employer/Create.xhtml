@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="EmployerCreateDlg" widgetVar="EmployerCreateDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.CreateEmployerTitle}">
+            <h:form id="EmployerCreateForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{employerController.selected != null}">
+                        <p:outputLabel value="#{bundle.CreateEmployerLabel_id}" for="id" />
+                        <p:inputText id="id" value="#{employerController.selected.id}" title="#{bundle.CreateEmployerTitle_id}" required="true" requiredMessage="#{bundle.CreateEmployerRequiredMessage_id}"/>
+                        <p:outputLabel value="#{bundle.CreateEmployerLabel_companyName}" for="companyName" />
+                        <p:inputText id="companyName" value="#{employerController.selected.companyName}" title="#{bundle.CreateEmployerTitle_companyName}" required="true" requiredMessage="#{bundle.CreateEmployerRequiredMessage_companyName}"/>
+                        <p:outputLabel value="#{bundle.CreateEmployerLabel_description}" for="description" />
+                        <p:inputText id="description" value="#{employerController.selected.description}" title="#{bundle.CreateEmployerTitle_description}" />
+                        <p:outputLabel value="#{bundle.CreateEmployerLabel_site}" for="site" />
+                        <p:inputText id="site" value="#{employerController.selected.site}" title="#{bundle.CreateEmployerTitle_site}" />
+                        <p:outputLabel value="#{bundle.CreateEmployerLabel_personId}" for="personId" />
+                        <p:selectOneMenu id="personId" value="#{employerController.selected.personId}" required="true" requiredMessage="#{bundle.EditEmployerRequiredMessage_personId}">
+                            <f:selectItems value="#{personController.itemsAvailableSelectOne}"
+                                           var="personIdItem"
+                                           itemValue="#{personIdItem}"/>
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{employerController.create}" value="#{bundle.Save}" update="display,:EmployerListForm:datalist,:growl" oncomplete="handleSubmit(args,'EmployerCreateDialog');"/>
+                    <p:commandButton value="#{bundle.Cancel}" onclick="EmployerCreateDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>
