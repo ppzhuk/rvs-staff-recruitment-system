@@ -1,4 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/D:/YandexDisk/универ/11сем/РВС/rvs-staff-recruitment-system/src/java/ru/ppzh/rvssrs/facade/MarkFacade.java</file>
+            <file>file:/D:/YandexDisk/универ/11сем/РВС/rvs-staff-recruitment-system/web/crud/person/List.xhtml</file>
+            <file>file:/D:/YandexDisk/универ/11сем/РВС/rvs-staff-recruitment-system/src/java/ru/ppzh/rvssrs/jsf/PersonController.java</file>
+            <file>file:/D:/YandexDisk/универ/11сем/РВС/rvs-staff-recruitment-system/src/java/ru/ppzh/rvssrs/facade/PersonFacade.java</file>
+            <file>file:/D:/YandexDisk/универ/11сем/РВС/rvs-staff-recruitment-system/src/conf/persistence.xml</file>
+            <file>file:/D:/YandexDisk/универ/11сем/РВС/rvs-staff-recruitment-system/web/index.xhtml</file>
+            <file>file:/D:/YandexDisk/универ/11сем/РВС/rvs-staff-recruitment-system/web/crud/person/Create.xhtml</file>
+            <file>file:/D:/YandexDisk/универ/11сем/РВС/rvs-staff-recruitment-system/src/java/ru/ppzh/rvssrs/dao/PersonJpaController.java</file>
+        </group>
+    </open-files>
 </project-private>

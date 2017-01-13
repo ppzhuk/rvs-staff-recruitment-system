@@ -9,23 +9,7 @@
     <h:body>
         Hello from Facelets
         <br />
-        <h:link outcome="welcomePrimefaces" value="Primefaces welcome page" />
-        <br />
-        <h:link outcome="/crud/applicant/List" value="Show All Applicant Items"/>
-        <br />
-        <h:link outcome="/crud/employer/List" value="Show All Employer Items"/>
-        <br />
-        <h:link outcome="/crud/interview/List" value="Show All Interview Items"/>
-        <br />
-        <h:link outcome="/crud/manager/List" value="Show All Manager Items"/>
-        <br />
-        <h:link outcome="/crud/mark/List" value="Show All Mark Items"/>
-        <br />
-        <h:link outcome="/crud/person/List" value="Show All Person Items"/>
-        <br />
-        <h:link outcome="/crud/resume/List" value="Show All Resume Items"/>
-        <br />
-        <h:link outcome="/crud/vacancy/List" value="Show All Vacancy Items"/>
+        <h:outputText value="firstPersonName: #{personController.firstPersonName}"        />
     </h:body>
 
 

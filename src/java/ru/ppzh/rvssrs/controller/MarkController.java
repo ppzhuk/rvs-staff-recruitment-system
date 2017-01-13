@@ -1,9 +1,9 @@
-package ru.ppzh.rvssrs.jsf;
+package ru.ppzh.rvssrs.controller;
 
-import ru.ppzh.rvssrs.model.Employer;
+import ru.ppzh.rvssrs.model.Mark;
 import ru.ppzh.rvssrs.jsf.util.JsfUtil;
 import ru.ppzh.rvssrs.jsf.util.JsfUtil.PersistAction;
-import ru.ppzh.rvssrs.facade.EmployerFacade;
+import ru.ppzh.rvssrs.facade.MarkFacade;
 
 import java.io.Serializable;
 import java.util.List;
@@ -19,23 +19,23 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
-@Named("employerController")
+@Named("markController")
 @SessionScoped
-public class EmployerController implements Serializable {
+public class MarkController implements Serializable {
 
     @EJB
-    private ru.ppzh.rvssrs.facade.EmployerFacade ejbFacade;
-    private List<Employer> items = null;
-    private Employer selected;
+    private ru.ppzh.rvssrs.facade.MarkFacade ejbFacade;
+    private List<Mark> items = null;
+    private Mark selected;
 
-    public EmployerController() {
+    public MarkController() {
     }
 
-    public Employer getSelected() {
+    public Mark getSelected() {
         return selected;
     }
 
-    public void setSelected(Employer selected) {
+    public void setSelected(Mark selected) {
         this.selected = selected;
     }
 
@@ -45,36 +45,36 @@ public class EmployerController implements Serializable {
     protected void initializeEmbeddableKey() {
     }
 
-    private EmployerFacade getFacade() {
+    private MarkFacade getFacade() {
         return ejbFacade;
     }
 
-    public Employer prepareCreate() {
-        selected = new Employer();
+    public Mark prepareCreate() {
+        selected = new Mark();
         initializeEmbeddableKey();
         return selected;
     }
 
     public void create() {
-        persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("EmployerCreated"));
+        persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("MarkCreated"));
         if (!JsfUtil.isValidationFailed()) {
             items = null;    // Invalidate list of items to trigger re-query.
         }
     }
 
     public void update() {
-        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("EmployerUpdated"));
+        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("MarkUpdated"));
     }
 
     public void destroy() {
-        persist(PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("EmployerDeleted"));
+        persist(PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("MarkDeleted"));
         if (!JsfUtil.isValidationFailed()) {
             selected = null; // Remove selection
             items = null;    // Invalidate list of items to trigger re-query.
         }
     }
 
-    public List<Employer> getItems() {
+    public List<Mark> getItems() {
         if (items == null) {
             items = getFacade().findAll();
         }
@@ -109,29 +109,29 @@ public class EmployerController implements Serializable {
         }
     }
 
-    public Employer getEmployer(java.lang.Integer id) {
+    public Mark getMark(java.lang.Integer id) {
         return getFacade().find(id);
     }
 
-    public List<Employer> getItemsAvailableSelectMany() {
+    public List<Mark> getItemsAvailableSelectMany() {
         return getFacade().findAll();
     }
 
-    public List<Employer> getItemsAvailableSelectOne() {
+    public List<Mark> getItemsAvailableSelectOne() {
         return getFacade().findAll();
     }
 
-    @FacesConverter(forClass = Employer.class)
-    public static class EmployerControllerConverter implements Converter {
+    @FacesConverter(forClass = Mark.class)
+    public static class MarkControllerConverter implements Converter {
 
         @Override
         public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
             if (value == null || value.length() == 0) {
                 return null;
             }
-            EmployerController controller = (EmployerController) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "employerController");
-            return controller.getEmployer(getKey(value));
+            MarkController controller = (MarkController) facesContext.getApplication().getELResolver().
+                    getValue(facesContext.getELContext(), null, "markController");
+            return controller.getMark(getKey(value));
         }
 
         java.lang.Integer getKey(String value) {
@@ -151,11 +151,11 @@ public class EmployerController implements Serializable {
             if (object == null) {
                 return null;
             }
-            if (object instanceof Employer) {
-                Employer o = (Employer) object;
+            if (object instanceof Mark) {
+                Mark o = (Mark) object;
                 return getStringKey(o.getId());
             } else {
-                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), Employer.class.getName()});
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), Mark.class.getName()});
                 return null;
             }
         }

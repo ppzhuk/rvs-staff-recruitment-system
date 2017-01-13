@@ -1,9 +1,9 @@
-package ru.ppzh.rvssrs.jsf;
+package ru.ppzh.rvssrs.controller;
 
-import ru.ppzh.rvssrs.model.Manager;
+import ru.ppzh.rvssrs.model.Employer;
 import ru.ppzh.rvssrs.jsf.util.JsfUtil;
 import ru.ppzh.rvssrs.jsf.util.JsfUtil.PersistAction;
-import ru.ppzh.rvssrs.facade.ManagerFacade;
+import ru.ppzh.rvssrs.facade.EmployerFacade;
 
 import java.io.Serializable;
 import java.util.List;
@@ -19,23 +19,23 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
-@Named("managerController")
+@Named("employerController")
 @SessionScoped
-public class ManagerController implements Serializable {
+public class EmployerController implements Serializable {
 
     @EJB
-    private ru.ppzh.rvssrs.facade.ManagerFacade ejbFacade;
-    private List<Manager> items = null;
-    private Manager selected;
+    private ru.ppzh.rvssrs.facade.EmployerFacade ejbFacade;
+    private List<Employer> items = null;
+    private Employer selected;
 
-    public ManagerController() {
+    public EmployerController() {
     }
 
-    public Manager getSelected() {
+    public Employer getSelected() {
         return selected;
     }
 
-    public void setSelected(Manager selected) {
+    public void setSelected(Employer selected) {
         this.selected = selected;
     }
 
@@ -45,36 +45,36 @@ public class ManagerController implements Serializable {
     protected void initializeEmbeddableKey() {
     }
 
-    private ManagerFacade getFacade() {
+    private EmployerFacade getFacade() {
         return ejbFacade;
     }
 
-    public Manager prepareCreate() {
-        selected = new Manager();
+    public Employer prepareCreate() {
+        selected = new Employer();
         initializeEmbeddableKey();
         return selected;
     }
 
     public void create() {
-        persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("ManagerCreated"));
+        persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("EmployerCreated"));
         if (!JsfUtil.isValidationFailed()) {
             items = null;    // Invalidate list of items to trigger re-query.
         }
     }
 
     public void update() {
-        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("ManagerUpdated"));
+        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("EmployerUpdated"));
     }
 
     public void destroy() {
-        persist(PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("ManagerDeleted"));
+        persist(PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("EmployerDeleted"));
         if (!JsfUtil.isValidationFailed()) {
             selected = null; // Remove selection
             items = null;    // Invalidate list of items to trigger re-query.
         }
     }
 
-    public List<Manager> getItems() {
+    public List<Employer> getItems() {
         if (items == null) {
             items = getFacade().findAll();
         }
@@ -109,29 +109,29 @@ public class ManagerController implements Serializable {
         }
     }
 
-    public Manager getManager(java.lang.Integer id) {
+    public Employer getEmployer(java.lang.Integer id) {
         return getFacade().find(id);
     }
 
-    public List<Manager> getItemsAvailableSelectMany() {
+    public List<Employer> getItemsAvailableSelectMany() {
         return getFacade().findAll();
     }
 
-    public List<Manager> getItemsAvailableSelectOne() {
+    public List<Employer> getItemsAvailableSelectOne() {
         return getFacade().findAll();
     }
 
-    @FacesConverter(forClass = Manager.class)
-    public static class ManagerControllerConverter implements Converter {
+    @FacesConverter(forClass = Employer.class)
+    public static class EmployerControllerConverter implements Converter {
 
         @Override
         public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
             if (value == null || value.length() == 0) {
                 return null;
             }
-            ManagerController controller = (ManagerController) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "managerController");
-            return controller.getManager(getKey(value));
+            EmployerController controller = (EmployerController) facesContext.getApplication().getELResolver().
+                    getValue(facesContext.getELContext(), null, "employerController");
+            return controller.getEmployer(getKey(value));
         }
 
         java.lang.Integer getKey(String value) {
@@ -151,11 +151,11 @@ public class ManagerController implements Serializable {
             if (object == null) {
                 return null;
             }
-            if (object instanceof Manager) {
-                Manager o = (Manager) object;
+            if (object instanceof Employer) {
+                Employer o = (Employer) object;
                 return getStringKey(o.getId());
             } else {
-                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), Manager.class.getName()});
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), Employer.class.getName()});
                 return null;
             }
         }

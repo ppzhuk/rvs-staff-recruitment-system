@@ -7,7 +7,9 @@ package ru.ppzh.rvssrs.facade;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
+import ru.ppzh.rvssrs.dao.PersonJpaController;
 import ru.ppzh.rvssrs.model.Person;
 
 /**
@@ -19,7 +21,7 @@ public class PersonFacade extends AbstractFacade<Person> {
 
     @PersistenceContext(unitName = "rvs-staff-recruitment-systemPU")
     private EntityManager em;
-
+    
     @Override
     protected EntityManager getEntityManager() {
         return em;

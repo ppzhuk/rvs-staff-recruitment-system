@@ -1,4 +1,4 @@
-package ru.ppzh.rvssrs.jsf;
+package ru.ppzh.rvssrs.controller;
 
 import ru.ppzh.rvssrs.model.Applicant;
 import ru.ppzh.rvssrs.jsf.util.JsfUtil;

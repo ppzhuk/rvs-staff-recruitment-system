@@ -1,9 +1,9 @@
-package ru.ppzh.rvssrs.jsf;
+package ru.ppzh.rvssrs.controller;
 
-import ru.ppzh.rvssrs.model.Interview;
+import ru.ppzh.rvssrs.model.Vacancy;
 import ru.ppzh.rvssrs.jsf.util.JsfUtil;
 import ru.ppzh.rvssrs.jsf.util.JsfUtil.PersistAction;
-import ru.ppzh.rvssrs.facade.InterviewFacade;
+import ru.ppzh.rvssrs.facade.VacancyFacade;
 
 import java.io.Serializable;
 import java.util.List;
@@ -19,23 +19,23 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
-@Named("interviewController")
+@Named("vacancyController")
 @SessionScoped
-public class InterviewController implements Serializable {
+public class VacancyController implements Serializable {
 
     @EJB
-    private ru.ppzh.rvssrs.facade.InterviewFacade ejbFacade;
-    private List<Interview> items = null;
-    private Interview selected;
+    private ru.ppzh.rvssrs.facade.VacancyFacade ejbFacade;
+    private List<Vacancy> items = null;
+    private Vacancy selected;
 
-    public InterviewController() {
+    public VacancyController() {
     }
 
-    public Interview getSelected() {
+    public Vacancy getSelected() {
         return selected;
     }
 
-    public void setSelected(Interview selected) {
+    public void setSelected(Vacancy selected) {
         this.selected = selected;
     }
 
@@ -45,36 +45,36 @@ public class InterviewController implements Serializable {
     protected void initializeEmbeddableKey() {
     }
 
-    private InterviewFacade getFacade() {
+    private VacancyFacade getFacade() {
         return ejbFacade;
     }
 
-    public Interview prepareCreate() {
-        selected = new Interview();
+    public Vacancy prepareCreate() {
+        selected = new Vacancy();
         initializeEmbeddableKey();
         return selected;
     }
 
     public void create() {
-        persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("InterviewCreated"));
+        persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("VacancyCreated"));
         if (!JsfUtil.isValidationFailed()) {
             items = null;    // Invalidate list of items to trigger re-query.
         }
     }
 
     public void update() {
-        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("InterviewUpdated"));
+        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("VacancyUpdated"));
     }
 
     public void destroy() {
-        persist(PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("InterviewDeleted"));
+        persist(PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("VacancyDeleted"));
         if (!JsfUtil.isValidationFailed()) {
             selected = null; // Remove selection
             items = null;    // Invalidate list of items to trigger re-query.
         }
     }
 
-    public List<Interview> getItems() {
+    public List<Vacancy> getItems() {
         if (items == null) {
             items = getFacade().findAll();
         }
@@ -109,29 +109,29 @@ public class InterviewController implements Serializable {
         }
     }
 
-    public Interview getInterview(java.lang.Integer id) {
+    public Vacancy getVacancy(java.lang.Integer id) {
         return getFacade().find(id);
     }
 
-    public List<Interview> getItemsAvailableSelectMany() {
+    public List<Vacancy> getItemsAvailableSelectMany() {
         return getFacade().findAll();
     }
 
-    public List<Interview> getItemsAvailableSelectOne() {
+    public List<Vacancy> getItemsAvailableSelectOne() {
         return getFacade().findAll();
     }
 
-    @FacesConverter(forClass = Interview.class)
-    public static class InterviewControllerConverter implements Converter {
+    @FacesConverter(forClass = Vacancy.class)
+    public static class VacancyControllerConverter implements Converter {
 
         @Override
         public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
             if (value == null || value.length() == 0) {
                 return null;
             }
-            InterviewController controller = (InterviewController) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "interviewController");
-            return controller.getInterview(getKey(value));
+            VacancyController controller = (VacancyController) facesContext.getApplication().getELResolver().
+                    getValue(facesContext.getELContext(), null, "vacancyController");
+            return controller.getVacancy(getKey(value));
         }
 
         java.lang.Integer getKey(String value) {
@@ -151,11 +151,11 @@ public class InterviewController implements Serializable {
             if (object == null) {
                 return null;
             }
-            if (object instanceof Interview) {
-                Interview o = (Interview) object;
+            if (object instanceof Vacancy) {
+                Vacancy o = (Vacancy) object;
                 return getStringKey(o.getId());
             } else {
-                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), Interview.class.getName()});
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), Vacancy.class.getName()});
                 return null;
             }
         }

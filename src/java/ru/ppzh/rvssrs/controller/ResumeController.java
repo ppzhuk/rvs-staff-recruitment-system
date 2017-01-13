@@ -1,9 +1,9 @@
-package ru.ppzh.rvssrs.jsf;
+package ru.ppzh.rvssrs.controller;
 
-import ru.ppzh.rvssrs.model.Person;
+import ru.ppzh.rvssrs.model.Resume;
 import ru.ppzh.rvssrs.jsf.util.JsfUtil;
 import ru.ppzh.rvssrs.jsf.util.JsfUtil.PersistAction;
-import ru.ppzh.rvssrs.facade.PersonFacade;
+import ru.ppzh.rvssrs.facade.ResumeFacade;
 
 import java.io.Serializable;
 import java.util.List;
@@ -19,23 +19,23 @@ import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
 
-@Named("personController")
+@Named("resumeController")
 @SessionScoped
-public class PersonController implements Serializable {
+public class ResumeController implements Serializable {
 
     @EJB
-    private ru.ppzh.rvssrs.facade.PersonFacade ejbFacade;
-    private List<Person> items = null;
-    private Person selected;
+    private ru.ppzh.rvssrs.facade.ResumeFacade ejbFacade;
+    private List<Resume> items = null;
+    private Resume selected;
 
-    public PersonController() {
+    public ResumeController() {
     }
 
-    public Person getSelected() {
+    public Resume getSelected() {
         return selected;
     }
 
-    public void setSelected(Person selected) {
+    public void setSelected(Resume selected) {
         this.selected = selected;
     }
 
@@ -45,36 +45,36 @@ public class PersonController implements Serializable {
     protected void initializeEmbeddableKey() {
     }
 
-    private PersonFacade getFacade() {
+    private ResumeFacade getFacade() {
         return ejbFacade;
     }
 
-    public Person prepareCreate() {
-        selected = new Person();
+    public Resume prepareCreate() {
+        selected = new Resume();
         initializeEmbeddableKey();
         return selected;
     }
 
     public void create() {
-        persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("PersonCreated"));
+        persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("ResumeCreated"));
         if (!JsfUtil.isValidationFailed()) {
             items = null;    // Invalidate list of items to trigger re-query.
         }
     }
 
     public void update() {
-        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("PersonUpdated"));
+        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("ResumeUpdated"));
     }
 
     public void destroy() {
-        persist(PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("PersonDeleted"));
+        persist(PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("ResumeDeleted"));
         if (!JsfUtil.isValidationFailed()) {
             selected = null; // Remove selection
             items = null;    // Invalidate list of items to trigger re-query.
         }
     }
 
-    public List<Person> getItems() {
+    public List<Resume> getItems() {
         if (items == null) {
             items = getFacade().findAll();
         }
@@ -109,29 +109,29 @@ public class PersonController implements Serializable {
         }
     }
 
-    public Person getPerson(java.lang.Integer id) {
+    public Resume getResume(java.lang.Integer id) {
         return getFacade().find(id);
     }
 
-    public List<Person> getItemsAvailableSelectMany() {
+    public List<Resume> getItemsAvailableSelectMany() {
         return getFacade().findAll();
     }
 
-    public List<Person> getItemsAvailableSelectOne() {
+    public List<Resume> getItemsAvailableSelectOne() {
         return getFacade().findAll();
     }
 
-    @FacesConverter(forClass = Person.class)
-    public static class PersonControllerConverter implements Converter {
+    @FacesConverter(forClass = Resume.class)
+    public static class ResumeControllerConverter implements Converter {
 
         @Override
         public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
             if (value == null || value.length() == 0) {
                 return null;
             }
-            PersonController controller = (PersonController) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "personController");
-            return controller.getPerson(getKey(value));
+            ResumeController controller = (ResumeController) facesContext.getApplication().getELResolver().
+                    getValue(facesContext.getELContext(), null, "resumeController");
+            return controller.getResume(getKey(value));
         }
 
         java.lang.Integer getKey(String value) {
@@ -151,11 +151,11 @@ public class PersonController implements Serializable {
             if (object == null) {
                 return null;
             }
-            if (object instanceof Person) {
-                Person o = (Person) object;
+            if (object instanceof Resume) {
+                Resume o = (Resume) object;
                 return getStringKey(o.getId());
             } else {
-                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), Person.class.getName()});
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), Resume.class.getName()});
                 return null;
             }
         }

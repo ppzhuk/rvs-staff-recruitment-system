@@ -1,15 +1,16 @@
-package ru.ppzh.rvssrs.jsf;
+package ru.ppzh.rvssrs.controller;
 
-import ru.ppzh.rvssrs.model.Mark;
+import ru.ppzh.rvssrs.model.Person;
 import ru.ppzh.rvssrs.jsf.util.JsfUtil;
 import ru.ppzh.rvssrs.jsf.util.JsfUtil.PersistAction;
-import ru.ppzh.rvssrs.facade.MarkFacade;
+import ru.ppzh.rvssrs.facade.PersonFacade;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.inject.Named;
@@ -18,24 +19,48 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
+import javax.transaction.UserTransaction;
+import ru.ppzh.rvssrs.dao.PersonJpaController;
 
-@Named("markController")
+@Named("personController")
 @SessionScoped
-public class MarkController implements Serializable {
+public class PersonController implements Serializable {
 
     @EJB
-    private ru.ppzh.rvssrs.facade.MarkFacade ejbFacade;
-    private List<Mark> items = null;
-    private Mark selected;
+    private ru.ppzh.rvssrs.facade.PersonFacade ejbFacade;
+    private List<Person> items = null;
+    private Person selected;
 
-    public MarkController() {
+    @PersistenceUnit(unitName="rvs-staff-recruitment-systemPU")
+    EntityManagerFactory emf; 
+    @Resource 
+    UserTransaction utx;
+    
+    private PersonJpaController dao = null;
+    
+    public PersonJpaController getDao() {
+        if (dao == null) {
+            return new PersonJpaController(utx, emf);
+        } else {
+            return dao;
+        }
     }
-
-    public Mark getSelected() {
+    
+    public PersonController() {
+    }
+    
+    public String getFirstPersonName() {
+        return getDao().findPerson(1).getName();
+    }
+    
+    
+    public Person getSelected() {
         return selected;
     }
 
-    public void setSelected(Mark selected) {
+    public void setSelected(Person selected) {
         this.selected = selected;
     }
 
@@ -45,36 +70,36 @@ public class MarkController implements Serializable {
     protected void initializeEmbeddableKey() {
     }
 
-    private MarkFacade getFacade() {
+    private PersonFacade getFacade() {
         return ejbFacade;
     }
 
-    public Mark prepareCreate() {
-        selected = new Mark();
+    public Person prepareCreate() {
+        selected = new Person();
         initializeEmbeddableKey();
         return selected;
     }
 
     public void create() {
-        persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("MarkCreated"));
+        persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("PersonCreated"));
         if (!JsfUtil.isValidationFailed()) {
             items = null;    // Invalidate list of items to trigger re-query.
         }
     }
 
     public void update() {
-        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("MarkUpdated"));
+        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("PersonUpdated"));
     }
 
     public void destroy() {
-        persist(PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("MarkDeleted"));
+        persist(PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("PersonDeleted"));
         if (!JsfUtil.isValidationFailed()) {
             selected = null; // Remove selection
             items = null;    // Invalidate list of items to trigger re-query.
         }
     }
 
-    public List<Mark> getItems() {
+    public List<Person> getItems() {
         if (items == null) {
             items = getFacade().findAll();
         }
@@ -109,29 +134,29 @@ public class MarkController implements Serializable {
         }
     }
 
-    public Mark getMark(java.lang.Integer id) {
+    public Person getPerson(java.lang.Integer id) {
         return getFacade().find(id);
     }
 
-    public List<Mark> getItemsAvailableSelectMany() {
+    public List<Person> getItemsAvailableSelectMany() {
         return getFacade().findAll();
     }
 
-    public List<Mark> getItemsAvailableSelectOne() {
+    public List<Person> getItemsAvailableSelectOne() {
         return getFacade().findAll();
     }
 
-    @FacesConverter(forClass = Mark.class)
-    public static class MarkControllerConverter implements Converter {
+    @FacesConverter(forClass = Person.class)
+    public static class PersonControllerConverter implements Converter {
 
         @Override
         public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
             if (value == null || value.length() == 0) {
                 return null;
             }
-            MarkController controller = (MarkController) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "markController");
-            return controller.getMark(getKey(value));
+            PersonController controller = (PersonController) facesContext.getApplication().getELResolver().
+                    getValue(facesContext.getELContext(), null, "personController");
+            return controller.getPerson(getKey(value));
         }
 
         java.lang.Integer getKey(String value) {
@@ -151,11 +176,11 @@ public class MarkController implements Serializable {
             if (object == null) {
                 return null;
             }
-            if (object instanceof Mark) {
-                Mark o = (Mark) object;
+            if (object instanceof Person) {
+                Person o = (Person) object;
                 return getStringKey(o.getId());
             } else {
-                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), Mark.class.getName()});
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), Person.class.getName()});
                 return null;
             }
         }
