@@ -5,10 +5,15 @@
  */
 package ru.ppzh.rvssrs.facade;
 
+import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
+import javax.persistence.Query;
+import javax.transaction.UserTransaction;
 import ru.ppzh.rvssrs.dao.PersonJpaController;
 import ru.ppzh.rvssrs.model.Person;
 
@@ -26,9 +31,7 @@ public class PersonFacade extends AbstractFacade<Person> {
     protected EntityManager getEntityManager() {
         return em;
     }
-
     public PersonFacade() {
         super(Person.class);
     }
-    
 }

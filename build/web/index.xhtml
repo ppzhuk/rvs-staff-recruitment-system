@@ -1,15 +1,35 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
     <h:head>
-        <title>Facelet Title</title>
-        <h:outputStylesheet name="css/jsfcrud.css"/>
+        <title>Login Page</title>
     </h:head>
     <h:body>
-        Hello from Facelets
-        <br />
-        <h:outputText value="firstPersonName: #{personController.firstPersonName}"        />
+        <h3>Sign in</h3>
+        <h:form>
+            <p:panelGrid columns="2"
+                columnClasses="rightalign,leftalign">
+                             
+            <p:outputLabel value="Login:" for="login"/>
+            <p:inputText id="login" label="Login" 
+                         required="true"
+                         value="#{loginController.login}" />
+            
+            <p:outputLabel value="Password:" for="password"/>
+            <p:password id="password" label="Password" 
+                        required="true" 
+                        value="#{loginController.password}" />
+             
+            
+            <h:panelGroup/>
+            <h:commandButton id="login_btn" value="Sign in" 
+                             action="#{loginController.tryToLogin()}" />
+            </p:panelGrid>
+            <p:messages /> 
+        </h:form>
+
     </h:body>
 
 

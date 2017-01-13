@@ -17,6 +17,7 @@ import ru.ppzh.rvssrs.model.Mark;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.transaction.UserTransaction;
@@ -353,4 +354,16 @@ public class PersonJpaController implements Serializable {
         }
     }
     
+    public Person findPersonByLoginAndPass(String login, String pass) {
+        EntityManager em = getEntityManager();
+        try {
+            Query query =
+                em.createNamedQuery("Person.findByLoginAndPass");
+            query.setParameter("login", login);
+            query.setParameter("password", pass);
+            return (Person) query.getSingleResult();
+        } finally {
+            em.close();
+        }
+    }
 }
