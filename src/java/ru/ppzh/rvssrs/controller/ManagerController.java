@@ -1,8 +1,8 @@
 package ru.ppzh.rvssrs.controller;
 
 import ru.ppzh.rvssrs.model.Manager;
-import ru.ppzh.rvssrs.jsf.util.JsfUtil;
-import ru.ppzh.rvssrs.jsf.util.JsfUtil.PersistAction;
+import ru.ppzh.rvssrs.controller.util.JsfUtil;
+import ru.ppzh.rvssrs.controller.util.JsfUtil.PersistAction;
 import ru.ppzh.rvssrs.facade.ManagerFacade;
 
 import java.io.Serializable;
@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.inject.Named;
@@ -18,6 +19,10 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
+import javax.transaction.UserTransaction;
+import ru.ppzh.rvssrs.dao.ManagerJpaController;
 
 @Named("managerController")
 @SessionScoped
@@ -28,6 +33,21 @@ public class ManagerController implements Serializable {
     private List<Manager> items = null;
     private Manager selected;
 
+    @PersistenceUnit(unitName="rvs-staff-recruitment-systemPU")
+    EntityManagerFactory emf; 
+    @Resource 
+    UserTransaction utx;
+    
+    private ManagerJpaController dao = null;
+    
+    public ManagerJpaController getDao() {
+        if (dao == null) {
+            return new ManagerJpaController(utx, emf);
+        } else {
+            return dao;
+        }
+    }
+    
     public ManagerController() {
     }
 

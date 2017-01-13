@@ -1,8 +1,8 @@
 package ru.ppzh.rvssrs.controller;
 
 import ru.ppzh.rvssrs.model.Applicant;
-import ru.ppzh.rvssrs.jsf.util.JsfUtil;
-import ru.ppzh.rvssrs.jsf.util.JsfUtil.PersistAction;
+import ru.ppzh.rvssrs.controller.util.JsfUtil;
+import ru.ppzh.rvssrs.controller.util.JsfUtil.PersistAction;
 import ru.ppzh.rvssrs.facade.ApplicantFacade;
 
 import java.io.Serializable;
@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.inject.Named;
@@ -18,6 +19,10 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
+import javax.transaction.UserTransaction;
+import ru.ppzh.rvssrs.dao.ApplicantJpaController;
 
 @Named("applicantController")
 @SessionScoped
@@ -27,7 +32,22 @@ public class ApplicantController implements Serializable {
     private ru.ppzh.rvssrs.facade.ApplicantFacade ejbFacade;
     private List<Applicant> items = null;
     private Applicant selected;
-
+    
+    @PersistenceUnit(unitName="rvs-staff-recruitment-systemPU")
+    EntityManagerFactory emf; 
+    @Resource 
+    UserTransaction utx;
+    
+    private ApplicantJpaController dao = null;
+    
+    public ApplicantJpaController getDao() {
+        if (dao == null) {
+            return new ApplicantJpaController(utx, emf);
+        } else {
+            return dao;
+        }
+    }
+    
     public ApplicantController() {
     }
 

@@ -1,4 +1,4 @@
-package ru.ppzh.rvssrs.jsf.util;
+package ru.ppzh.rvssrs.controller.util;
 
 import java.util.List;
 import javax.faces.application.FacesMessage;

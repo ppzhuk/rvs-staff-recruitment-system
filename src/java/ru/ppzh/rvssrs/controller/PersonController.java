@@ -1,8 +1,8 @@
 package ru.ppzh.rvssrs.controller;
 
 import ru.ppzh.rvssrs.model.Person;
-import ru.ppzh.rvssrs.jsf.util.JsfUtil;
-import ru.ppzh.rvssrs.jsf.util.JsfUtil.PersistAction;
+import ru.ppzh.rvssrs.controller.util.JsfUtil;
+import ru.ppzh.rvssrs.controller.util.JsfUtil.PersistAction;
 import ru.ppzh.rvssrs.facade.PersonFacade;
 
 import java.io.Serializable;
