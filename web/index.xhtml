@@ -21,15 +21,24 @@
             <p:password id="password" label="Password" 
                         required="true" 
                         value="#{loginController.password}" />
-             
             
             <h:panelGroup/>
             <h:commandButton id="login_btn" value="Sign in" 
                              action="#{loginController.tryToLogin()}" />
             </p:panelGrid>
-            <p:messages /> 
+        </h:form>
+        <h:form>
+            <p>
+            <h:commandButton id="register_empl_btn" value="Register new employer" 
+                             action="register_new_employer" />
+            </p>
+            <p>
+            <h:commandButton id="register_aplcnt_btn" value="Register new applicant" 
+                             action="register_new_applicant" />
+            </p>
         </h:form>
 
+            <p:messages /> 
     </h:body>
 
 
