@@ -99,4 +99,12 @@ public class LoginController implements Serializable {
     public void setLogin(String login) {
         this.login = login;
     }
+
+    public Person getLoginPerson() {
+        return loginPerson;
+    }
+
+    public void setLoginPerson(Person loginPerson) {
+        this.loginPerson = loginPerson;
+    }
 }
