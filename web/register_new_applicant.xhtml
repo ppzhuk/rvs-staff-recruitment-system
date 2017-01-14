@@ -35,7 +35,9 @@
                     <p:message for="passwordConf"/>
                     
                     <p:outputLabel value="Email:" for="email" />
-                    <p:inputText id="email" value="#{registrationController.email}" title="Email" required="true" requiredMessage="The Email field is required."/>
+                    <p:inputText id="email" value="#{registrationController.email}" title="Email" required="true" requiredMessage="The Email field is required.">
+                        <f:validator validatorId="emailValidator"/>
+                    </p:inputText>
                     <p:message for="email"/>
                     
                     <p:outputLabel value="Experience:" for="experience" />
