@@ -1,12 +1,67 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
     <h:head>
         <title>Register new applicant</title>
     </h:head>
     <h:body>
-        Register new applicant
+        <f:view>
+
+            <h:form id="new_applicant_form">
+                <h1><h:outputText value="Create"/></h1>
+                <h:panelGrid columns="3" columnClasses="rightalign,leftalign,leftalign">
+                    <p:outputLabel value="Name:" for="name" />
+                    <p:inputText id="name" value="#{registrationController.name}" title="Name" required="true" requiredMessage="The Name field is required."/>
+                    <p:message for="name"/>
+                    
+                    <p:outputLabel value="Login:" for="login" />
+                    <p:inputText id="login" value="#{registrationController.login}" title="Login" required="true" requiredMessage="The Login field is required."/>
+                    <p:message for="login"/>
+                    
+                    <p:outputLabel value="Password:" for="password" />
+                    <p:inputText id="password" value="#{registrationController.pass}" title="Password" required="true" requiredMessage="The Password field is required."/>
+                    <p:message for="password"/>
+                    
+                    <p:outputLabel value="Password confirmation:" for="passwordConf" />
+                    <p:inputText id="passwordConf" value="#{registrationController.passConfirm}" title="Password confirmation" required="true" requiredMessage="The Password confirmation field is required."/>
+                    <p:message for="passwordConf"/>
+                    
+                    <p:outputLabel value="Email:" for="email" />
+                    <p:inputText id="email" value="#{registrationController.email}" title="Email" required="true" requiredMessage="The Email field is required."/>
+                    <p:message for="email"/>
+                    
+                    <p:outputLabel value="Experience:" for="experience" />
+                    <p:inputText id="experience" value="#{registrationController.expertise}" title="Experience" required="true" requiredMessage="The Experience field is required."/>
+                    <p:message for="experience"/>
+                    
+                    <p:outputLabel value="Skills:" for="skills" />
+                    <p:inputText id="skills" value="#{registrationController.skills}" title="Skills" required="true" requiredMessage="The Skills field is required."/>
+                    <p:message for="skills"/>
+                    
+                    <p:outputLabel value="Education:" for="education" />
+                    <p:inputText id="education" value="#{registrationController.education}" title="Education" required="true" requiredMessage="The Education field is required."/>
+                    <p:message for="education"/>
+                    
+                    <p:outputLabel value="Description:" for="description" />
+                    <p:inputText id="description" value="#{registrationController.description}" title="Description" required="false"/>
+                    <p:message for="description"/>
+                    
+                    <h:panelGroup/>
+                    <p:commandButton id="create_new_aplcnt_btn" value="Create" 
+                                     action="#{registrationController.createNewApplicant()}"
+                                     update="new_applicant_form"
+                                     />
+                    <h:panelGroup/>
+                    <h:panelGroup/>
+                    <p:button id="cancel_create_new_aplcnt_btn" value="Back" 
+                             outcome="index" />
+                    <h:panelGroup/>
+                </h:panelGrid>
+            </h:form>
+        </f:view>
     </h:body>
 </html>
 

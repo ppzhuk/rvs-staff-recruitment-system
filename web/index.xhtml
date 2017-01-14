@@ -7,38 +7,39 @@
         <title>Login Page</title>
     </h:head>
     <h:body>
-        <h3>Sign in</h3>
-        <h:form>
-            <p:panelGrid columns="2"
-                columnClasses="rightalign,leftalign">
+        <h:form id="login_form">
+            <h1><h:outputText value="Sign in/Sign up"/></h1>
+            <h:panelGrid id="login_grid" columns="3"
+                columnClasses="rightalign,leftalign,leftalign">
                              
             <p:outputLabel value="Login:" for="login"/>
             <p:inputText id="login" label="Login" 
                          required="true"
                          value="#{loginController.login}" />
+            <p:message for="login"  />
             
             <p:outputLabel value="Password:" for="password"/>
             <p:password id="password" label="Password" 
                         required="true" 
                         value="#{loginController.password}" />
+            <p:message for="password" />
             
             <h:panelGroup/>
-            <h:commandButton id="login_btn" value="Sign in" 
-                             action="#{loginController.tryToLogin()}" />
-            </p:panelGrid>
+            <p:commandButton id="login_btn" value="Sign in" 
+                             action="#{loginController.tryToLogin()}"
+                             update="login_form"/>
+            <h:panelGroup/>
+            <h:panelGroup/>
+            <p:button id="register_empl_btn" value="Register new employer" 
+                             outcome="register_new_employer" />
+            <h:panelGroup/>
+            <h:panelGroup/>
+            <p:button id="register_aplcnt_btn" value="Register new applicant" 
+                             outcome="register_new_applicant" />
+            <h:panelGroup/>
+            </h:panelGrid>
         </h:form>
-        <h:form>
-            <p>
-            <h:commandButton id="register_empl_btn" value="Register new employer" 
-                             action="register_new_employer" />
-            </p>
-            <p>
-            <h:commandButton id="register_aplcnt_btn" value="Register new applicant" 
-                             action="register_new_applicant" />
-            </p>
-        </h:form>
-
-            <p:messages /> 
+        
     </h:body>
 
 

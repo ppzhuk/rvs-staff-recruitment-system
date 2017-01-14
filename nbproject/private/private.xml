@@ -5,12 +5,14 @@
         <group>
             <file>file:/D:/YandexDisk/универ/11сем/РВС/rvs-staff-recruitment-system/src/java/ru/ppzh/rvssrs/controller/util/JsfUtil.java</file>
             <file>file:/D:/YandexDisk/универ/11сем/РВС/rvs-staff-recruitment-system/web/error.xhtml</file>
+            <file>file:/D:/YandexDisk/универ/11сем/РВС/rvs-staff-recruitment-system/web/register_new_applicant.xhtml</file>
             <file>file:/D:/YandexDisk/универ/11сем/РВС/rvs-staff-recruitment-system/web/main.xhtml</file>
             <file>file:/D:/YandexDisk/универ/11сем/РВС/rvs-staff-recruitment-system/src/java/ru/ppzh/rvssrs/model/Person.java</file>
             <file>file:/D:/YandexDisk/универ/11сем/РВС/rvs-staff-recruitment-system/src/java/ru/ppzh/rvssrs/facade/PersonFacade.java</file>
             <file>file:/D:/YandexDisk/универ/11сем/РВС/rvs-staff-recruitment-system/src/java/ru/ppzh/rvssrs/controller/ResumeController.java</file>
             <file>file:/D:/YandexDisk/универ/11сем/РВС/rvs-staff-recruitment-system/src/java/ru/ppzh/rvssrs/controller/ApplicantController.java</file>
             <file>file:/D:/YandexDisk/универ/11сем/РВС/rvs-staff-recruitment-system/web/index.xhtml</file>
+            <file>file:/D:/YandexDisk/универ/11сем/РВС/rvs-staff-recruitment-system/web/register_new_employer.xhtml</file>
             <file>file:/D:/YandexDisk/универ/11сем/РВС/rvs-staff-recruitment-system/src/java/ru/ppzh/rvssrs/dao/PersonJpaController.java</file>
             <file>file:/D:/YandexDisk/универ/11сем/РВС/rvs-staff-recruitment-system/src/java/ru/ppzh/rvssrs/controller/PersonController.java</file>
             <file>file:/D:/YandexDisk/универ/11сем/РВС/rvs-staff-recruitment-system/src/java/ru/ppzh/rvssrs/controller/MarkController.java</file>
@@ -19,6 +21,7 @@
             <file>file:/D:/YandexDisk/универ/11сем/РВС/rvs-staff-recruitment-system/src/java/ru/ppzh/rvssrs/controller/InterviewController.java</file>
             <file>file:/D:/YandexDisk/универ/11сем/РВС/rvs-staff-recruitment-system/src/java/ru/ppzh/rvssrs/controller/EmployerController.java</file>
             <file>file:/D:/YandexDisk/универ/11сем/РВС/rvs-staff-recruitment-system/src/java/ru/ppzh/rvssrs/controller/ManagerController.java</file>
+            <file>file:/D:/YandexDisk/универ/11сем/РВС/rvs-staff-recruitment-system/web/create_vacancy.xhtml</file>
         </group>
     </open-files>
 </project-private>
