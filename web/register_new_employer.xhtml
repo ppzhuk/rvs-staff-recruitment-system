@@ -1,12 +1,75 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
     <h:head>
-        <title>Register new employer</title>
+        <title>Register new applicant</title>
     </h:head>
     <h:body>
-        Register new employer
+        <f:view>
+
+            <h:form id="new_applicant_form">
+                <h1><h:outputText value="Create"/></h1>
+                <h:panelGrid columns="3" columnClasses="rightalign,leftalign,leftalign">
+                    <p:outputLabel value="Name:" for="name" />
+                    <p:inputText id="name" value="#{registrationController.name}" title="Name" required="true" requiredMessage="The Name field is required."/>
+                    <p:message for="name"/>
+                    
+                    <p:outputLabel value="Login:" for="login" />
+                    <p:inputText id="login" value="#{registrationController.login}" title="Login" required="true" requiredMessage="The Login field is required.">
+                        <f:validator validatorId="lengthValidator"/>
+                        <f:validator binding="#{uniqueLoginValidator}" />
+                    </p:inputText>
+                    <p:message for="login"/>
+                    
+                    <p:outputLabel value="Password:" for="password" />
+                    <p:password id="password" value="#{registrationController.pass}" title="Password" required="true" requiredMessage="The Password field is required.">
+                        <f:validator validatorId="lengthValidator"/>
+                    </p:password>
+                    <p:message for="password"/>
+                    
+                    <p:outputLabel value="Password confirmation:" for="passwordConf"/>
+                    <p:password id="passwordConf" value="#{registrationController.passConfirm}" 
+                                title="Password confirmation" required="true" 
+                                requiredMessage="The Password confirmation field is required.">
+                        <f:validator validatorId="passConfirmValidator"/>
+                        <f:attribute name="field1Id" value="#{component.parent.parent.clientId}:password" />
+                    </p:password>
+                    <p:message for="passwordConf"/>
+                    
+                    <p:outputLabel value="Email:" for="email" />
+                    <p:inputText id="email" value="#{registrationController.email}" title="Email" required="true" requiredMessage="The Email field is required.">
+                        <f:validator validatorId="emailValidator"/>
+                    </p:inputText>
+                    <p:message for="email"/>
+                    
+                    <p:outputLabel value="Company name:" for="company_name" />
+                    <p:inputText id="company_name" value="#{registrationController.companyName}" title="Company name" required="true" requiredMessage="The Company name field is required."/>
+                    <p:message for="company_name"/>
+                    
+                    <p:outputLabel value="Description:" for="description" />
+                    <p:inputText id="description" value="#{registrationController.description}" title="Description" required="false"/>
+                    <p:message for="description"/>
+                    
+                    <p:outputLabel value="Site:" for="site" />
+                    <p:inputText id="site" value="#{registrationController.site}" title="Site" required="false"/>
+                    <p:message for="site"/>
+                    
+                    <h:panelGroup/>
+                    <p:commandButton id="create_new_aplcnt_btn" value="Create" 
+                                     action="#{registrationController.createNewEmployer()}"
+                                     update="new_applicant_form"
+                                     />
+                    <h:panelGroup/>
+                    <h:panelGroup/>
+                    <p:button id="cancel_create_new_aplcnt_btn" value="Back" 
+                             outcome="index" />
+                    <h:panelGroup/>
+                </h:panelGrid>
+            </h:form>
+        </f:view>
     </h:body>
 </html>
 

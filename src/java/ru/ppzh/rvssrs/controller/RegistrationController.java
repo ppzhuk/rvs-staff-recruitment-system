@@ -19,6 +19,7 @@ import ru.ppzh.rvssrs.dao.PersonJpaController;
 import ru.ppzh.rvssrs.dao.ResumeJpaController;
 import ru.ppzh.rvssrs.dao.exceptions.RollbackFailureException;
 import ru.ppzh.rvssrs.model.Applicant;
+import ru.ppzh.rvssrs.model.Employer;
 import ru.ppzh.rvssrs.model.Person;
 import ru.ppzh.rvssrs.model.Resume;
 
@@ -213,7 +214,7 @@ public class RegistrationController {
         return "index";
     }
     
-    public Resume createNewResume(Applicant applicantId) {
+    private Resume createNewResume(Applicant applicantId) {
         Resume r = new Resume();
         r.setApplicantId(applicantId);
         r.setSkills(skills);
@@ -229,6 +230,19 @@ public class RegistrationController {
     }
     
     public String createNewEmployer() {
-        return "";
+        Person p = createNewPerson();
+        Employer e = new Employer();
+        e.setPersonId(p);
+        e.setCompanyName(companyName);
+        e.setDescription(description);
+        e.setSite(site);
+        try {
+            getEmployerDao().create(e);
+        } catch (RollbackFailureException ex) {
+            Logger.getLogger(RegistrationController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(RegistrationController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "index";
     }
 }
