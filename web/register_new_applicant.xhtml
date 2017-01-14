@@ -18,15 +18,19 @@
                     <p:message for="name"/>
                     
                     <p:outputLabel value="Login:" for="login" />
-                    <p:inputText id="login" value="#{registrationController.login}" title="Login" required="true" requiredMessage="The Login field is required."/>
+                    <p:inputText id="login" value="#{registrationController.login}" title="Login" required="true" requiredMessage="The Login field is required.">
+                        <f:validator validatorId="lengthValidator"/>
+                    </p:inputText>
                     <p:message for="login"/>
                     
                     <p:outputLabel value="Password:" for="password" />
-                    <p:inputText id="password" value="#{registrationController.pass}" title="Password" required="true" requiredMessage="The Password field is required."/>
+                    <p:password id="password" value="#{registrationController.pass}" title="Password" required="true" requiredMessage="The Password field is required.">
+                        <f:validator validatorId="lengthValidator"/>
+                    </p:password>
                     <p:message for="password"/>
                     
                     <p:outputLabel value="Password confirmation:" for="passwordConf" />
-                    <p:inputText id="passwordConf" value="#{registrationController.passConfirm}" title="Password confirmation" required="true" requiredMessage="The Password confirmation field is required."/>
+                    <p:password id="passwordConf" value="#{registrationController.passConfirm}" title="Password confirmation" required="true" requiredMessage="The Password confirmation field is required."/>
                     <p:message for="passwordConf"/>
                     
                     <p:outputLabel value="Email:" for="email" />
