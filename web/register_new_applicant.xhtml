@@ -30,8 +30,13 @@
                     </p:password>
                     <p:message for="password"/>
                     
-                    <p:outputLabel value="Password confirmation:" for="passwordConf" />
-                    <p:password id="passwordConf" value="#{registrationController.passConfirm}" title="Password confirmation" required="true" requiredMessage="The Password confirmation field is required."/>
+                    <p:outputLabel value="Password confirmation:" for="passwordConf"/>
+                    <p:password id="passwordConf" value="#{registrationController.passConfirm}" 
+                                title="Password confirmation" required="true" 
+                                requiredMessage="The Password confirmation field is required.">
+                        <f:validator validatorId="passConfirmValidator"/>
+                        <f:attribute name="field1Id" value="#{component.parent.parent.clientId}:password" />
+                    </p:password>
                     <p:message for="passwordConf"/>
                     
                     <p:outputLabel value="Email:" for="email" />
