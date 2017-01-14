@@ -20,6 +20,7 @@
                     <p:outputLabel value="Login:" for="login" />
                     <p:inputText id="login" value="#{registrationController.login}" title="Login" required="true" requiredMessage="The Login field is required.">
                         <f:validator validatorId="lengthValidator"/>
+                        <f:validator binding="#{uniqueLoginValidator}" />
                     </p:inputText>
                     <p:message for="login"/>
                     

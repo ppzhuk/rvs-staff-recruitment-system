@@ -7,20 +7,21 @@ package ru.ppzh.rvssrs.controller.validator;
 
 import java.util.List;
 import javax.annotation.Resource;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
-import javax.faces.component.html.HtmlInputText;
 import javax.faces.context.FacesContext;
-import javax.faces.validator.FacesValidator;
 import javax.faces.validator.Validator;
 import javax.faces.validator.ValidatorException;
+import javax.inject.Named;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 import javax.transaction.UserTransaction;
 import ru.ppzh.rvssrs.dao.PersonJpaController;
 import ru.ppzh.rvssrs.model.Person;
 
-@FacesValidator(value ="uniqueLoginValidator")
+@Named
+@RequestScoped
 public class UniqueLoginValidator implements Validator{
     @PersistenceUnit(unitName="rvs-staff-recruitment-systemPU")
     EntityManagerFactory emf; 
