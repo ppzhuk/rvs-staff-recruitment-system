@@ -34,7 +34,8 @@ import javax.validation.constraints.Size;
     , @NamedQuery(name = "Mark.findByMark", query = "SELECT m FROM Mark m WHERE m.mark = :mark")
     , @NamedQuery(name = "Mark.findByComment", query = "SELECT m FROM Mark m WHERE m.comment = :comment")})
 public class Mark implements Serializable {
-
+    public static final double SATISFACTORY_MARK = 3.0;
+    
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

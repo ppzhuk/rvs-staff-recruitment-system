@@ -33,7 +33,11 @@ import javax.validation.constraints.Size;
     , @NamedQuery(name = "Interview.findByEmployerResult", query = "SELECT i FROM Interview i WHERE i.employerResult = :employerResult")
     , @NamedQuery(name = "Interview.findByApplicantResult", query = "SELECT i FROM Interview i WHERE i.applicantResult = :applicantResult")})
 public class Interview implements Serializable {
-
+    
+    public static final int RESULT_POSITIVE = 1;
+    public static final int RESULT_UNDEFINED = 0;
+    public static final int RESULT_NEGATIVE = -1;
+    
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,9 +48,9 @@ public class Interview implements Serializable {
     @Column(name = "date", length = 100)
     private String date;
     @Column(name = "employer_result")
-    private Integer employerResult;
+    private Integer employerResult = RESULT_UNDEFINED;
     @Column(name = "applicant_result")
-    private Integer applicantResult;
+    private Integer applicantResult = RESULT_UNDEFINED;
     @JoinColumn(name = "applicant_id", referencedColumnName = "id")
     @ManyToOne(fetch = FetchType.EAGER)
     private Applicant applicantId;

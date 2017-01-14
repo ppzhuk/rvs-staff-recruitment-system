@@ -7,7 +7,9 @@ package ru.ppzh.rvssrs.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.regex.Pattern;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -39,7 +41,10 @@ import javax.validation.constraints.Size;
     , @NamedQuery(name = "Vacancy.findByStatus", query = "SELECT v FROM Vacancy v WHERE v.status = :status")
     , @NamedQuery(name = "Vacancy.findByCloseDate", query = "SELECT v FROM Vacancy v WHERE v.closeDate = :closeDate")})
 public class Vacancy implements Serializable {
-
+    public static final int STATUS_OPEN = -1;
+    public static final int STATUS_CLOSE = 1;
+    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy.MM.dd");
+    public static final Pattern datePattern = Pattern.compile("(?:[0-9]{2})[0-9]{2}[.][0-1][1-9][.][0-3][0-9]");
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,10 +67,10 @@ public class Vacancy implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "status", nullable = false)
-    private int status;
+    private int status = STATUS_OPEN;
     @Size(max = 100)
     @Column(name = "closeDate", length = 100)
-    private String closeDate;
+    private String closeDate = null;
     @OneToMany(mappedBy = "vacancyId", fetch = FetchType.EAGER)
     private Collection<Resume> resumeCollection;
     @OneToMany(mappedBy = "vacancyId", fetch = FetchType.EAGER)

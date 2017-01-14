@@ -5,21 +5,22 @@
  */
 package ru.ppzh.rvssrs.controller;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
-import javax.faces.application.FacesMessage;
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import javax.faces.validator.FacesValidator;
-import javax.faces.validator.Validator;
-import javax.faces.validator.ValidatorException;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 import javax.transaction.UserTransaction;
 import ru.ppzh.rvssrs.dao.ApplicantJpaController;
 import ru.ppzh.rvssrs.dao.EmployerJpaController;
 import ru.ppzh.rvssrs.dao.PersonJpaController;
+import ru.ppzh.rvssrs.dao.ResumeJpaController;
+import ru.ppzh.rvssrs.dao.exceptions.RollbackFailureException;
+import ru.ppzh.rvssrs.model.Applicant;
+import ru.ppzh.rvssrs.model.Person;
+import ru.ppzh.rvssrs.model.Resume;
 
 @Named(value = "registrationController")
 @RequestScoped
@@ -48,7 +49,16 @@ public class RegistrationController {
     
     private PersonJpaController personDao = null;
     private ApplicantJpaController applicantDao = null;    
-    private EmployerJpaController employerDao = null;
+    private EmployerJpaController employerDao = null;  
+    private ResumeJpaController resumeDao = null;
+    
+    public ResumeJpaController getResumeDao() {
+        if (resumeDao == null) {
+            return new ResumeJpaController(utx, emf);
+        } else {
+            return resumeDao;
+        }
+    }
     
     public PersonJpaController getPersonDao() {
         if (personDao == null) {
@@ -173,12 +183,49 @@ public class RegistrationController {
     public RegistrationController() {
     }
     
-    private boolean createNewPerson() {
-        return true;
+    private Person createNewPerson() {
+        Person p = new Person();
+        p.setLogin(login);
+        p.setPassword(pass);
+        p.setName(name);
+        p.setEmail(email);
+        try {
+            getPersonDao().create(p);
+        } catch (Exception ex) {
+            Logger.getLogger(RegistrationController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("person id after save to db: "+p.getId());
+        return p;
     }
     
     public String createNewApplicant() {
-        return "";
+        Person p = createNewPerson();
+        Applicant a = new Applicant();
+        a.setPersonId(p);
+        try {
+            getApplicantDao().create(a);
+        } catch (RollbackFailureException ex) {
+            Logger.getLogger(RegistrationController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(RegistrationController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        createNewResume(a);
+        return "index";
+    }
+    
+    public Resume createNewResume(Applicant applicantId) {
+        Resume r = new Resume();
+        r.setApplicantId(applicantId);
+        r.setSkills(skills);
+        r.setEducation(education);
+        r.setExperience(expertise);
+        r.setDescription(description);
+        try {
+            getResumeDao().create(r);
+        } catch (Exception ex) {
+            Logger.getLogger(RegistrationController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return r;
     }
     
     public String createNewEmployer() {

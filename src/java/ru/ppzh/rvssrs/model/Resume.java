@@ -62,7 +62,7 @@ public class Resume implements Serializable {
     @Column(name = "description", length = 500)
     private String description;
     @Column(name = "in_search")
-    private Boolean inSearch;
+    private Boolean inSearch = true;
     @JoinColumn(name = "applicant_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false, fetch = FetchType.EAGER)
     private Applicant applicantId;
