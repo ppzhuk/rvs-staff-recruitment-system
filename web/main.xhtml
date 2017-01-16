@@ -2,26 +2,59 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
         <title>Staff recruitment system</title>
     </h:head>
     <h:body>
-        Main page.
+        <div align="right">
+            User: <b>${loginController.loginPerson.name}</b>
+            <br/><br/>
+            <p:button id="logout_btn" value="Sign out" 
+                      outcome="#{loginController.logout()}" />
+        </div>
         <br/>
-        ${loginController.loginResultMsg}
-        <br/>
-        <h:form>
-            <h:commandButton id="logout_btn" value="Sign out" 
-                             action="#{loginController.logout()}" />
-        </h:form>
-        <br/>
-        <c:if test="${loginController.loginPerson.employer != null}">
-            <h:form>
-                <h:commandButton id="new_vacancy_btn" value="Create vacancy" 
-                                 action="create_vacancy" />
-            </h:form>
-        </c:if>
+        <p:panel header="Actions">
+            <p:button id="edit_person_data_btn" value="Edit person data" 
+                      outcome="edit_person_data"/>
+            <c:if test="${loginController.loginPerson.employer != null}">
+                <p:button id="new_vacancy_btn" value="Create vacancy" 
+                                 outcome="create_vacancy" />
+            </c:if>  
+        </p:panel>
+
+        <p:panel header="Vacancy" >
+            <h:selectOneMenu value="#{vacancyController.displayMode}">
+                <f:selectItem itemValue="all" itemLabel="all"/>
+                <f:selectItem itemValue="opened" itemLabel="opened"/>
+                <f:selectItem itemValue="closed" itemLabel="closed"/>
+                <c:if test="${loginController.loginPerson.employer != null}">
+                    <f:selectItem itemValue="own" itemLabel="own"/>
+                </c:if>
+            </h:selectOneMenu>
+            <br/>
+            <p:dataTable value="#{vacancyController.allVacancies}" var="item">
+                <p:column>
+                    <f:facet name="header">Id</f:facet>
+                    #{item.id}
+                </p:column>
+                <p:column>
+                    <f:facet name="header">Position</f:facet>
+                    #{item.position}
+                </p:column>                
+                <p:column>
+                    <f:facet name="header">Company name</f:facet>
+                    #{item.employerId.companyName}
+                </p:column>                
+                <p:column>
+                    <f:facet name="header">Status</f:facet>
+                    #{vacancyController.getStatus(item.status)}
+                </p:column>                
+                
+            </p:dataTable>
+        </p:panel>
         
     </h:body>
 </html>
