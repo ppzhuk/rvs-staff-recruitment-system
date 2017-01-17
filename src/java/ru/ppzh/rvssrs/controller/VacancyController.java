@@ -16,6 +16,7 @@ import javax.persistence.PersistenceUnit;
 import javax.transaction.UserTransaction;
 import ru.ppzh.rvssrs.dao.PersonJpaController;
 import ru.ppzh.rvssrs.dao.VacancyJpaController;
+import ru.ppzh.rvssrs.dao.exceptions.RollbackFailureException;
 import ru.ppzh.rvssrs.model.Employer;
 import ru.ppzh.rvssrs.model.Person;
 import ru.ppzh.rvssrs.model.Vacancy;
@@ -132,6 +133,23 @@ public class VacancyController implements Serializable {
         } else {
             throw new NullPointerException("trying to create new vacancy, but it is null");
         }    
+    }
+    
+    public void destroy() {
+        if (selected != null) {
+            selected.setEmployerId(
+                    loginController.getLoginPerson().getEmployer()
+            );
+            try {
+                getDao().destroy(selected.getId());
+            } catch (RollbackFailureException ex) {
+                Logger.getLogger(VacancyController.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (Exception ex) {
+                Logger.getLogger(VacancyController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            throw new NullPointerException("trying to delete new vacancy, but it is null");
+        }   
     }
     
     public void log(String name) {

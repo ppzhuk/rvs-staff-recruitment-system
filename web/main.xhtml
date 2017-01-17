@@ -59,7 +59,7 @@
                             <p:commandButton id="createVacancyButton" icon="ui-icon-plus"   value="#{bundle.Create}" update=":VacancyCreateForm" oncomplete="PF('VacancyCreateDialog').show()" actionListener="#{vacancyController.prepareCreate}" disabled="#{empty loginController.loginPerson.employer}"/>
                             <p:commandButton id="viewVacancyButton"   icon="ui-icon-search" value="#{bundle.View}" update=":VacancyViewForm" oncomplete="PF('VacancyViewDialog').show()" disabled="#{empty vacancyController.selected}"/>
                             <!--<p:commandButton id="editVacancyButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":VacancyEditForm" oncomplete="PF('VacancyEditDialog').show()" disabled="true"/>-->
-                            <p:commandButton id="deleteVacancyButton" icon="ui-icon-trash"  value="#{bundle.Delete}" update=":growl,VacancyListTable" actionListener="#{vacancyController.destroy}"  disabled="true"/>
+                            <p:commandButton id="deleteVacancyButton" icon="ui-icon-trash"  value="#{bundle.Delete}" update=":growl,VacancyListTable" actionListener="#{vacancyController.destroy}"  disabled="#{(empty loginController.loginPerson.employer) or (vacancyController.selected.employerId.id ne loginController.loginPerson.employer.id)}"/>
                         </f:facet>
                     </p:dataTable>
                 </p:panel>
