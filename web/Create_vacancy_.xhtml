@@ -12,30 +12,15 @@
             <h:form id="VacancyCreateForm">
                 <h:panelGroup id="display">
                     <p:panelGrid columns="2" rendered="#{vacancyController.selected != null}">
-                        <p:outputLabel value="#{bundle.CreateVacancyLabel_id}" for="id" />
-                        <p:inputText id="id" value="#{vacancyController.selected.id}" title="#{bundle.CreateVacancyTitle_id}" required="true" requiredMessage="#{bundle.CreateVacancyRequiredMessage_id}"/>
+                        
                         <p:outputLabel value="#{bundle.CreateVacancyLabel_position}" for="position" />
                         <p:inputText id="position" value="#{vacancyController.selected.position}" title="#{bundle.CreateVacancyTitle_position}" required="true" requiredMessage="#{bundle.CreateVacancyRequiredMessage_position}"/>
                         <p:outputLabel value="#{bundle.CreateVacancyLabel_requirments}" for="requirments" />
                         <p:inputText id="requirments" value="#{vacancyController.selected.requirments}" title="#{bundle.CreateVacancyTitle_requirments}" required="true" requiredMessage="#{bundle.CreateVacancyRequiredMessage_requirments}"/>
                         <p:outputLabel value="#{bundle.CreateVacancyLabel_salary}" for="salary" />
-                        <p:inputText id="salary" value="#{vacancyController.selected.salary}" title="#{bundle.CreateVacancyTitle_salary}" />
-                        <p:outputLabel value="#{bundle.CreateVacancyLabel_status}" for="status" />
-                        <p:inputText id="status" value="#{vacancyController.selected.status}" title="#{bundle.CreateVacancyTitle_status}" required="true" requiredMessage="#{bundle.CreateVacancyRequiredMessage_status}"/>
-                        <p:outputLabel value="#{bundle.CreateVacancyLabel_closeDate}" for="closeDate" />
-                        <p:inputText id="closeDate" value="#{vacancyController.selected.closeDate}" title="#{bundle.CreateVacancyTitle_closeDate}" />
-                        <p:outputLabel value="#{bundle.CreateVacancyLabel_applicantId}" for="applicantId" />
-                        <p:selectOneMenu id="applicantId" value="#{vacancyController.selected.applicantId}" >
-                            <f:selectItems value="#{applicantController.itemsAvailableSelectOne}"
-                                           var="applicantIdItem"
-                                           itemValue="#{applicantIdItem}"/>
-                        </p:selectOneMenu>
-                        <p:outputLabel value="#{bundle.CreateVacancyLabel_employerId}" for="employerId" />
-                        <p:selectOneMenu id="employerId" value="#{vacancyController.selected.employerId}" required="true" requiredMessage="#{bundle.EditVacancyRequiredMessage_employerId}">
-                            <f:selectItems value="#{employerController.itemsAvailableSelectOne}"
-                                           var="employerIdItem"
-                                           itemValue="#{employerIdItem}"/>
-                        </p:selectOneMenu>
+                        <p:inputText id="salary" value="#{vacancyController.selected.salary}" title="#{bundle.CreateVacancyTitle_salary}" required="true">
+                            <f:validator validatorId="salaryValidator"/>
+                        </p:inputText>
                     </p:panelGrid>
                     <p:commandButton actionListener="#{vacancyController.create}" value="#{bundle.Save}" update="display,:VacancyListForm:VacancyListTable," oncomplete="handleSubmit(args,'VacancyCreateDialog');"/>
                     <p:commandButton value="#{bundle.Cancel}" onclick="VacancyCreateDialog.hide()"/>

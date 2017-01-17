@@ -15,14 +15,6 @@
         </ui:define>
 
         <ui:define name="body">
-            
-            <p:panel header="Actions">
-                <p:button id="edit_person_data_btn" value="Edit person data" 
-                          outcome="edit_person_data"/>
-                <c:if test="${loginController.loginPerson.employer != null}">
-                    <p:button id="new_vacancy_btn" value="Create vacancy" />
-                </c:if>  
-            </p:panel>
         
             <h:form id="VacancyListForm">
                 <p:panel header="Vacancy" >    
@@ -64,7 +56,7 @@
                             #{vacancyController.getStatus(item.status)}
                         </p:column>                
                         <f:facet name="footer">
-                            <p:commandButton id="createVacancyButton" icon="ui-icon-plus"   value="#{bundle.Create}" update=":VacancyCreateForm" oncomplete="PF('VacancyCreateDialog').show()" actionListener="#{vacancyController.prepareCreate}" disabled="true"/>
+                            <p:commandButton id="createVacancyButton" icon="ui-icon-plus"   value="#{bundle.Create}" update=":VacancyCreateForm" oncomplete="PF('VacancyCreateDialog').show()" actionListener="#{vacancyController.prepareCreate}" disabled="#{empty loginController.loginPerson.employer}"/>
                             <p:commandButton id="viewVacancyButton"   icon="ui-icon-search" value="#{bundle.View}" update=":VacancyViewForm" oncomplete="PF('VacancyViewDialog').show()" disabled="#{empty vacancyController.selected}"/>
                             <!--<p:commandButton id="editVacancyButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":VacancyEditForm" oncomplete="PF('VacancyEditDialog').show()" disabled="true"/>-->
                             <p:commandButton id="deleteVacancyButton" icon="ui-icon-trash"  value="#{bundle.Delete}" update=":growl,VacancyListTable" actionListener="#{vacancyController.destroy}"  disabled="true"/>

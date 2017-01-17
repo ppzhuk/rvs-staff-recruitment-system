@@ -3,6 +3,9 @@ package ru.ppzh.rvssrs.controller;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -116,6 +119,21 @@ public class VacancyController implements Serializable {
         return selected;
     }
     
+    public void create() {
+        if (selected != null) {
+            selected.setEmployerId(
+                    loginController.getLoginPerson().getEmployer()
+            );
+            try {
+                getDao().create(selected);
+            } catch (Exception ex) {
+                Logger.getLogger(VacancyController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            throw new NullPointerException("trying to create new vacancy, but it is null");
+        }    
+    }
+    
     public void log(String name) {
         StringBuilder sb = new StringBuilder("");
         sb.append(name + "  -  ");
@@ -126,4 +144,5 @@ public class VacancyController implements Serializable {
         }
         System.out.println(sb.toString());
     }
+    
 }
