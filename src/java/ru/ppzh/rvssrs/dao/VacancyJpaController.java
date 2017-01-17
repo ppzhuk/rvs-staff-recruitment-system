@@ -319,4 +319,40 @@ public class VacancyJpaController implements Serializable {
         }
     }
     
+    
+    public List<Vacancy> getVacanciesByStatus(int status) {
+        EntityManager em = getEntityManager();
+        try {
+            Query query =
+                em.createNamedQuery("Vacancy.findByStatus");
+            query.setParameter("status", status);
+            return query.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+    
+    public List<Vacancy> getVacanciesByEmployerId(int employerId) {
+        EntityManager em = getEntityManager();
+        try {
+//            Query query =
+//                em.createNamedQuery("Employer.findById");
+//            query.setParameter("id", employerId);
+//            Employer e = (Employer)query.getSingleResult();
+//            System.out.println("found employer with id: " + e.getId());
+//            query = em.createNamedQuery("Vacancy.findByEmployer");
+//            query.setParameter("employer", e);
+//            List<Vacancy> list = query.getResultList();
+//            System.out.println("found vacancies: " + list.size());
+//            return list;
+
+            Query query =
+                em.createNamedQuery("Vacancy.findByEmployerId");
+            query.setParameter("employerId", employerId);
+            return query.getResultList();
+
+        } finally {
+            em.close();
+        }
+    }
 }

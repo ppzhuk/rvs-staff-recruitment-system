@@ -33,7 +33,7 @@ public class LoginController implements Serializable {
     private String password;
     private String loginResultMsg;
     
-    private Person loginPerson = null;
+    private Person loginPerson;
     
     @PersistenceUnit(unitName="rvs-staff-recruitment-systemPU")
     EntityManagerFactory emf; 
@@ -60,6 +60,7 @@ public class LoginController implements Serializable {
         try {
             loginPerson = getDao().findPersonByLoginAndPass(login, password);
             setLoginResultMsg("Welcome, " + loginPerson.getName() + "!");
+            log("tryToLogin");
             return "main";
         } catch (NoResultException e) {
             setLoginResultMsg("Wrong login or password.");
@@ -70,12 +71,6 @@ public class LoginController implements Serializable {
         }
     }
     
-    public String logout() {
-        loginPerson = null;
-        loginResultMsg = "";
-        return "index";
-    }
-
     public String getLoginResultMsg() {
         return loginResultMsg;
     }
@@ -101,10 +96,48 @@ public class LoginController implements Serializable {
     }
 
     public Person getLoginPerson() {
+        log("getLoginPerson");
         return loginPerson;
     }
 
     public void setLoginPerson(Person loginPerson) {
         this.loginPerson = loginPerson;
+    }
+    
+    public void log(String name) {
+        StringBuilder sb = new StringBuilder("");
+        sb.append(name + "  -  ");
+        if (login != null) {
+            sb.append("login: " + login + ", ");
+        } else {
+            sb.append("login: " + null + ", ");
+        }
+        if (password != null) {
+            sb.append("password: " + password + ", ");
+        } else {
+            sb.append("password: " + null + ", ");
+        }
+        if (loginPerson != null) {
+            sb.append("loginPerson: " + loginPerson.toString() + ", ");
+        } else {
+            sb.append("loginPerson: " + null + ", ");
+        }
+        if (loginResultMsg != null) {
+            sb.append("loginResultMsg: " + loginResultMsg + ", ");
+        } else {
+            sb.append("loginResultMsg: " + null + ", ");
+        }
+
+        if (personFacade != null) {
+            sb.append("personFacade: " + personFacade.toString() + ", ");
+        } else {
+            sb.append("personFacade: " + null + ", ");
+        }
+        if (dao != null) {
+            sb.append("personDao: " + dao.toString() + ", ");
+        } else {
+            sb.append("personDao: " + null + ", ");
+        }
+        System.out.println(sb.toString());
     }
 }

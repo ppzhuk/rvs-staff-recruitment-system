@@ -1,15 +1,20 @@
 package ru.ppzh.rvssrs.controller;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
+import javax.inject.Inject;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 import javax.transaction.UserTransaction;
+import ru.ppzh.rvssrs.dao.PersonJpaController;
 import ru.ppzh.rvssrs.dao.VacancyJpaController;
+import ru.ppzh.rvssrs.model.Employer;
+import ru.ppzh.rvssrs.model.Person;
 import ru.ppzh.rvssrs.model.Vacancy;
 
 @Named("vacancyController")
@@ -19,7 +24,7 @@ public class VacancyController implements Serializable {
     @EJB
     private ru.ppzh.rvssrs.facade.VacancyFacade ejbFacade;
     
-    private String displayMode;
+    private String displayMode = "all";
 
     @PersistenceUnit(unitName="rvs-staff-recruitment-systemPU")
     EntityManagerFactory emf; 
@@ -36,18 +41,56 @@ public class VacancyController implements Serializable {
         }
     }
     
-    private List<Vacancy> allVacancies;
+    private PersonJpaController personDao = null;
+    
+    public PersonJpaController getPersonDao() {
+        if (personDao == null) {
+            return new PersonJpaController(utx, emf);
+        } else {
+            return personDao;
+        }
+    }
+    private List<Vacancy> vacancies;
+    private Vacancy selected;
 
-    public List<Vacancy> getAllVacancies() {
+    public Vacancy getSelected() {
+        return selected;
+    }
+
+    public void setSelected(Vacancy selected) {
+        this.selected = selected;
+    }
+    
+    @Inject 
+    private LoginController loginController;
+
+    public List<Vacancy> getSomeVacancies() {
+        VacancyJpaController dao = getDao();
+        if (displayMode.equals("all")) {
+            vacancies = dao.findVacancyEntities();
+        } else if (displayMode.equals("opened")) {
+             vacancies = dao.getVacanciesByStatus(Vacancy.STATUS_OPEN);
+        } else if (displayMode.equals("closed")) {
+             vacancies = dao.getVacanciesByStatus(Vacancy.STATUS_CLOSE);
+        } else if (displayMode.equals("own")) {
+            Employer e = loginController.getLoginPerson().getEmployer();
+            if (e == null) {
+                vacancies = new ArrayList<Vacancy>();
+            } else {
+                vacancies = dao.getVacanciesByEmployerId(e.getId());
+            }
+        } else {
+            vacancies = new ArrayList<Vacancy>();
+        }
         
-        List<Vacancy> list = getDao().findVacancyEntities();
-        System.out.println("!!!!!!!!!!!!  "+list.get(0).getStatus() + " "+list.get(1).getStatus()+ " "+list.get(2).getStatus());
-        return list;
+        return vacancies;
     }
 
-    public void setAllVacancies(List<Vacancy> allVacancies) {
-        this.allVacancies = allVacancies;
+    public void setVacancies(List<Vacancy> vacancies) {
+        this.vacancies = vacancies;
     }
+
+
     
     public VacancyController() {
     }
@@ -66,7 +109,7 @@ public class VacancyController implements Serializable {
     }
     
     public String getStatus(int code) {
-        return (code == 1) ? "CLOSE" : "OPEN";
+        return (code == Vacancy.STATUS_CLOSE) ? "CLOSE" : "OPEN";
     }
     
 }

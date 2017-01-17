@@ -39,7 +39,9 @@ import javax.validation.constraints.Size;
     , @NamedQuery(name = "Vacancy.findByRequirments", query = "SELECT v FROM Vacancy v WHERE v.requirments = :requirments")
     , @NamedQuery(name = "Vacancy.findBySalary", query = "SELECT v FROM Vacancy v WHERE v.salary = :salary")
     , @NamedQuery(name = "Vacancy.findByStatus", query = "SELECT v FROM Vacancy v WHERE v.status = :status")
-    , @NamedQuery(name = "Vacancy.findByCloseDate", query = "SELECT v FROM Vacancy v WHERE v.closeDate = :closeDate")})
+    , @NamedQuery(name = "Vacancy.findByCloseDate", query = "SELECT v FROM Vacancy v WHERE v.closeDate = :closeDate")
+    , @NamedQuery(name = "Vacancy.findByEmployer", query = "SELECT v FROM Vacancy v WHERE v.employerId = :employer")
+    , @NamedQuery(name = "Vacancy.findByEmployerId", query = "SELECT v FROM Vacancy v WHERE v.employerId.id = :employerId")})
 public class Vacancy implements Serializable {
     public static final int STATUS_OPEN = -1;
     public static final int STATUS_CLOSE = 1;
