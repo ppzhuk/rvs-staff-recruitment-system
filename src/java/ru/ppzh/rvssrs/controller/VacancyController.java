@@ -54,17 +54,19 @@ public class VacancyController implements Serializable {
     private Vacancy selected;
 
     public Vacancy getSelected() {
+        log("getSelected");
         return selected;
     }
 
     public void setSelected(Vacancy selected) {
+        log("setSelected");
         this.selected = selected;
     }
     
     @Inject 
     private LoginController loginController;
 
-    public List<Vacancy> getSomeVacancies() {
+    public List<Vacancy> getVacancies() {
         VacancyJpaController dao = getDao();
         if (displayMode.equals("all")) {
             vacancies = dao.findVacancyEntities();
@@ -104,12 +106,24 @@ public class VacancyController implements Serializable {
         this.displayMode = displayMode;
     }
 
-    public void log() {
-        System.out.println("!!!!!!!!!!!!  "+displayMode);
-    }
     
     public String getStatus(int code) {
-        return (code == Vacancy.STATUS_CLOSE) ? "CLOSE" : "OPEN";
+        return (code == Vacancy.STATUS_CLOSE) ? "CLOSED" : "OPEN";
     }
     
+    public Vacancy prepareCreate() {
+        selected = new Vacancy();
+        return selected;
+    }
+    
+    public void log(String name) {
+        StringBuilder sb = new StringBuilder("");
+        sb.append(name + "  -  ");
+        if (selected != null) {
+            sb.append("selected: " + selected.toString() + ", ");
+        } else {
+            sb.append("selected: " + null + ", ");
+        }
+        System.out.println(sb.toString());
+    }
 }

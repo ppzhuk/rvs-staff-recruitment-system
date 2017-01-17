@@ -1,68 +1,82 @@
-<?xml version='1.0' encoding='UTF-8' ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
       xmlns:h="http://xmlns.jcp.org/jsf/html"
-      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
-    <h:head>
-        <title>Staff recruitment system</title>
-    </h:head>
-    <h:body>
-        <div align="right">
-            User: <b>${loginController.loginPerson.name}</b>
-            <br/><br/>
-            <p:button id="logout_btn" value="Sign out" 
-                      outcome="index"  />
-        </div>
-        <br/>
-        <p:panel header="Actions">
-            <p:button id="edit_person_data_btn" value="Edit person data" 
-                      outcome="edit_person_data"/>
-            <c:if test="${loginController.loginPerson.employer != null}">
-                <p:button id="new_vacancy_btn" value="Create vacancy" 
-                                 outcome="create_vacancy" />
-            </c:if>  
-        </p:panel>
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
 
-        <p:panel header="Vacancy" >
-            <h:form id="VacancyListForm">
-                <p:selectOneMenu value="#{vacancyController.displayMode}" >
-                    <f:selectItem itemValue="all" itemLabel="all"/>
-                    <f:selectItem itemValue="opened" itemLabel="opened"/>
-                    <f:selectItem itemValue="closed" itemLabel="closed"/>
-                    <f:selectItem itemValue="own" itemLabel="own" />
-                    
-                    <p:ajax update="VacancyListTable"/>
-                </p:selectOneMenu>
-                <br/>
-                <p:dataTable id="VacancyListTable" value="#{vacancyController.getSomeVacancies()}" var="item"
-                             selectionMode="single" selection="#{vacancyController.selected}"
-                             paginator="true"
-                             rowKey="#{item.id}"
-                             rows="10"
-                             rowsPerPageTemplate="10,20,30,40,50">
-                    <p:column>
-                        <f:facet name="header">Id</f:facet>
-                        #{item.id}
-                    </p:column>
-                    <p:column>
-                        <f:facet name="header">Position</f:facet>
-                        #{item.position}
-                    </p:column>                
-                    <p:column>
-                        <f:facet name="header">Company name</f:facet>
-                        #{item.employerId.companyName}
-                    </p:column>                
-                    <p:column>
-                        <f:facet name="header">Status</f:facet>
-                        #{vacancyController.getStatus(item.status)}
-                    </p:column>                
+    <ui:composition template="/template.xhtml">
 
-                </p:dataTable>
-            </h:form>
-        </p:panel>
+
+        <ui:define name="title">
+            <h:outputText value="Staff recruitment system"></h:outputText>
+        </ui:define>
+
+        <ui:define name="body">
+            
+            <p:panel header="Actions">
+                <p:button id="edit_person_data_btn" value="Edit person data" 
+                          outcome="edit_person_data"/>
+                <c:if test="${loginController.loginPerson.employer != null}">
+                    <p:button id="new_vacancy_btn" value="Create vacancy" />
+                </c:if>  
+            </p:panel>
         
-    </h:body>
-</html>
+            <h:form id="VacancyListForm">
+                <p:panel header="Vacancy" >    
+                    <p:selectOneMenu value="#{vacancyController.displayMode}" >
+                        <f:selectItem itemValue="all" itemLabel="all"/>
+                        <f:selectItem itemValue="opened" itemLabel="opened"/>
+                        <f:selectItem itemValue="closed" itemLabel="closed"/>
+                        <f:selectItem itemValue="own" itemLabel="own" />
 
+                        <p:ajax update="VacancyListTable"/>
+                    </p:selectOneMenu>
+                    <br/>
+                    <p:dataTable id="VacancyListTable" 
+                                 value="#{vacancyController.vacancies}" 
+                                 var="item" selectionMode="single" 
+                                 selection="#{vacancyController.selected}"
+                                 paginator="true"
+                                 rowKey="#{item.id}"
+                                 rows="10"
+                                 rowsPerPageTemplate="10,20,30,40,50">
+                        
+                        <p:ajax event="rowSelect"   update="createVacancyButton viewVacancyButton deleteVacancyButton"/>
+                        <p:ajax event="rowUnselect" update="createVacancyButton viewVacancyButton deleteVacancyButton"/>
+                        
+                        <p:column>
+                            <f:facet name="header">Id</f:facet>
+                            #{item.id}
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Position</f:facet>
+                            #{item.position}
+                        </p:column>                
+                        <p:column>
+                            <f:facet name="header">Company name</f:facet>
+                            #{item.employerId.companyName}
+                        </p:column>                
+                        <p:column>
+                            <f:facet name="header">Status</f:facet>
+                            #{vacancyController.getStatus(item.status)}
+                        </p:column>                
+                        <f:facet name="footer">
+                            <p:commandButton id="createVacancyButton" icon="ui-icon-plus"   value="#{bundle.Create}" update=":VacancyCreateForm" oncomplete="PF('VacancyCreateDialog').show()" actionListener="#{vacancyController.prepareCreate}" disabled="true"/>
+                            <p:commandButton id="viewVacancyButton"   icon="ui-icon-search" value="#{bundle.View}" update=":VacancyViewForm" oncomplete="PF('VacancyViewDialog').show()" disabled="#{empty vacancyController.selected}"/>
+                            <!--<p:commandButton id="editVacancyButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":VacancyEditForm" oncomplete="PF('VacancyEditDialog').show()" disabled="true"/>-->
+                            <p:commandButton id="deleteVacancyButton" icon="ui-icon-trash"  value="#{bundle.Delete}" update=":growl,VacancyListTable" actionListener="#{vacancyController.destroy}"  disabled="true"/>
+                        </f:facet>
+                    </p:dataTable>
+                </p:panel>
+            </h:form>
+
+            <ui:include src="Create_vacancy_.xhtml"/>
+            <ui:include src="Edit_vacancy.xhtml"/>
+            <ui:include src="View_vacancy.xhtml"/>
+        </ui:define>
+    </ui:composition>
+
+</html>
