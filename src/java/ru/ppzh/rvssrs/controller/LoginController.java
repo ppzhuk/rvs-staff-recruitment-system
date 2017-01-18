@@ -8,14 +8,20 @@ package ru.ppzh.rvssrs.controller;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
 import java.io.Serializable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceUnit;
 import javax.transaction.UserTransaction;
+import ru.ppzh.rvssrs.dao.EmployerJpaController;
 import ru.ppzh.rvssrs.dao.PersonJpaController;
+import ru.ppzh.rvssrs.dao.exceptions.NonexistentEntityException;
+import ru.ppzh.rvssrs.dao.exceptions.RollbackFailureException;
 import ru.ppzh.rvssrs.facade.PersonFacade;
+import ru.ppzh.rvssrs.model.Employer;
 import ru.ppzh.rvssrs.model.Person;
 
 /**
@@ -41,12 +47,21 @@ public class LoginController implements Serializable {
     UserTransaction utx;
     
     private PersonJpaController dao = null;
+    private EmployerJpaController employerDao = null;  
     
     public PersonJpaController getDao() {
         if (dao == null) {
             return new PersonJpaController(utx, emf);
         } else {
             return dao;
+        }
+    }
+    
+    public EmployerJpaController getEmployerDao() {
+        if (employerDao == null) {
+            return new EmployerJpaController(utx, emf);
+        } else {
+            return employerDao;
         }
     }
     
@@ -102,6 +117,25 @@ public class LoginController implements Serializable {
 
     public void setLoginPerson(Person loginPerson) {
         this.loginPerson = loginPerson;
+    }
+    
+    public String updatePersonalData() {
+        Employer e = loginPerson.getEmployer();
+        try {
+            if (e != null) {
+                    getEmployerDao().edit(e);
+            } 
+            getDao().edit(loginPerson);
+            
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (RollbackFailureException ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return "main";
     }
     
     public void log(String name) {

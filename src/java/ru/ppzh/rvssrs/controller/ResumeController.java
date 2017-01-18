@@ -25,6 +25,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 import javax.transaction.UserTransaction;
 import ru.ppzh.rvssrs.dao.ResumeJpaController;
+import ru.ppzh.rvssrs.dao.exceptions.RollbackFailureException;
 import ru.ppzh.rvssrs.model.Applicant;
 
 @Named("resumeController")
@@ -88,13 +89,14 @@ public class ResumeController implements Serializable {
         return selected;
     }
 
-    public void create() {
-    }
-
     public void update() {
-    }
-
-    public void destroy() {
+        try {
+            getDao().edit(selected);
+        } catch (RollbackFailureException ex) {
+            Logger.getLogger(VacancyController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(VacancyController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public List<Resume> getItems() {

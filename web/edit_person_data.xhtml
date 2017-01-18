@@ -1,12 +1,43 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="http://xmlns.jcp.org/jsf/html">
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
-        <title>Facelet Title</title>
+        <title>Edit personal data</title>
     </h:head>
     <h:body>
-        Hello from Facelets
+        <h:form id="PersonalDataEditForm">
+                    <h:panelGrid columns="3">
+                        <p:outputLabel value="Name" for="name" />
+                        <p:inputText id="name" value="#{loginController.loginPerson.name}" title="Name" required="true"/>
+                        <p:message for="name"/>
+                        
+                        <p:outputLabel value="Email" for="email" />
+                        <p:inputText id="email" value="#{loginController.loginPerson.email}" title="Email" required="true">
+                            <f:validator validatorId="emailValidator"/>
+                        </p:inputText>
+                        <p:message for="email"/>
+                    </h:panelGrid>
+                    
+                    <h:panelGrid columns="3" rendered="#{not empty loginController.loginPerson.employer}">
+                        <p:outputLabel value="Company name:" for="company_name"/>
+                        <p:inputText id="company_name" value="#{loginController.loginPerson.employer.companyName}" title="Company name" required="true" requiredMessage="The Company name field is required."/>
+                        <p:message for="company_name"/>
+
+                        <p:outputLabel value="Description:" for="description" />
+                        <p:inputText id="description" value="#{loginController.loginPerson.employer.description}" title="Description" required="false"/>
+                        <p:message for="description"/>
+
+                        <p:outputLabel value="Site:" for="site" />
+                        <p:inputText id="site" value="#{loginController.loginPerson.employer.site}" title="Site" required="false"/>
+                        <p:message for="site"/>
+                    </h:panelGrid>
+                    
+            <p:commandButton action="#{loginController.updatePersonalData}" value="#{bundle.Save}" update="PersonalDataEditForm"/>
+                    <p:button value="#{bundle.Cancel}" outcome="main"/>         
+            </h:form>
     </h:body>
 </html>
 
