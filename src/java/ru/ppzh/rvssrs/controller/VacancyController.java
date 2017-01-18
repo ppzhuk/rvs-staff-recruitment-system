@@ -152,6 +152,16 @@ public class VacancyController implements Serializable {
         }   
     }
     
+    public void update() {
+        try {
+            getDao().edit(selected);
+        } catch (RollbackFailureException ex) {
+            Logger.getLogger(VacancyController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(VacancyController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     public void log(String name) {
         StringBuilder sb = new StringBuilder("");
         sb.append(name + "  -  ");

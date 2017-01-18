@@ -22,7 +22,7 @@
                             <f:validator validatorId="salaryValidator"/>
                         </p:inputText>
                     </p:panelGrid>
-                    <p:commandButton actionListener="#{vacancyController.create}" value="#{bundle.Save}" update="display,:VacancyListForm:VacancyListTable," oncomplete="handleSubmit(args,'VacancyCreateDialog');"/>
+                    <p:commandButton actionListener="#{vacancyController.create}" value="#{bundle.Save}" update="display,:VacancyListForm:VacancyListTable,:growl" oncomplete="handleSubmit(args,'VacancyCreateDialog');"/>
                     <p:commandButton value="#{bundle.Cancel}" onclick="VacancyCreateDialog.hide()"/>
                 </h:panelGroup>
             </h:form>

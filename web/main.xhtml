@@ -36,8 +36,8 @@
                                  rows="10"
                                  rowsPerPageTemplate="10,20,30,40,50">
                         
-                        <p:ajax event="rowSelect"   update="createVacancyButton viewVacancyButton deleteVacancyButton"/>
-                        <p:ajax event="rowUnselect" update="createVacancyButton viewVacancyButton deleteVacancyButton"/>
+                        <p:ajax event="rowSelect"   update="createVacancyButton viewVacancyButton deleteVacancyButton editVacancyButton"/>
+                        <p:ajax event="rowUnselect" update="createVacancyButton viewVacancyButton deleteVacancyButton editVacancyButton"/>
                         
                         <p:column>
                             <f:facet name="header">Id</f:facet>
@@ -58,7 +58,7 @@
                         <f:facet name="footer">
                             <p:commandButton id="createVacancyButton" icon="ui-icon-plus"   value="#{bundle.Create}" update=":VacancyCreateForm" oncomplete="PF('VacancyCreateDialog').show()" actionListener="#{vacancyController.prepareCreate}" disabled="#{empty loginController.loginPerson.employer}"/>
                             <p:commandButton id="viewVacancyButton"   icon="ui-icon-search" value="#{bundle.View}" update=":VacancyViewForm" oncomplete="PF('VacancyViewDialog').show()" disabled="#{empty vacancyController.selected}"/>
-                            <!--<p:commandButton id="editVacancyButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":VacancyEditForm" oncomplete="PF('VacancyEditDialog').show()" disabled="true"/>-->
+                            <p:commandButton id="editVacancyButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":VacancyEditForm" oncomplete="PF('VacancyEditDialog').show()" disabled="#{(empty loginController.loginPerson.employer) or (vacancyController.selected.employerId.id ne loginController.loginPerson.employer.id)}"/>
                             <p:commandButton id="deleteVacancyButton" icon="ui-icon-trash"  value="#{bundle.Delete}" update=":growl,VacancyListTable" actionListener="#{vacancyController.destroy}"  disabled="#{(empty loginController.loginPerson.employer) or (vacancyController.selected.employerId.id ne loginController.loginPerson.employer.id)}"/>
                         </f:facet>
                     </p:dataTable>
