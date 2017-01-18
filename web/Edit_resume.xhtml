@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+    <ui:composition>
+
+        <p:dialog id="ResumeEditDlg" widgetVar="ResumeEditDialog" modal="true" resizable="false" appendTo="@(body)" header="#{bundle.EditResumeTitle}">
+            <h:form id="ResumeEditForm">
+                <h:panelGroup id="display">
+                    <p:panelGrid columns="2" rendered="#{resumeController.selected != null}">
+                        <h:outputText value="#{bundle.ViewResumeLabel_applicantId}"/>
+                        <h:outputText value="#{resumeController.selected.applicantId}" title="#{bundle.ViewResumeTitle_applicantId}"/>
+                        <h:outputText value="Name"/>
+                        <h:outputText value="#{resumeController.selected.applicantId.personId.name}" title="Applicant Name"/>
+                        <h:outputText value="Resume Id"/>
+                        <h:outputText value="#{resumeController.selected.id}" title="#{bundle.ViewResumeTitle_id}"/>
+                        
+                        <p:outputLabel value="#{bundle.EditResumeLabel_experience}" for="experience" />
+                        <p:inputText id="experience" value="#{resumeController.selected.experience}" title="#{bundle.EditResumeTitle_experience}" required="true" requiredMessage="#{bundle.EditResumeRequiredMessage_experience}"/>
+                        <p:outputLabel value="#{bundle.EditResumeLabel_skills}" for="skills" />
+                        <p:inputText id="skills" value="#{resumeController.selected.skills}" title="#{bundle.EditResumeTitle_skills}" required="true" requiredMessage="#{bundle.EditResumeRequiredMessage_skills}"/>
+                        <p:outputLabel value="#{bundle.EditResumeLabel_education}" for="education" />
+                        <p:inputText id="education" value="#{resumeController.selected.education}" title="#{bundle.EditResumeTitle_education}" required="true" requiredMessage="#{bundle.EditResumeRequiredMessage_education}"/>
+                        <p:outputLabel value="#{bundle.EditResumeLabel_description}" for="description" />
+                        <p:inputText id="description" value="#{resumeController.selected.description}" title="#{bundle.EditResumeTitle_description}" />
+
+                        <h:outputText value="#{bundle.ViewResumeLabel_inSearch}"/>
+                        <p:selectBooleanCheckbox value="#{resumeController.selected.inSearch}" disabled="true"/>
+                        <h:outputText value="#{bundle.ViewResumeLabel_vacancyId}"/>
+                        <h:outputText value="#{resumeController.selected.vacancyId.id}" title="#{bundle.ViewResumeTitle_vacancyId}"/>
+                    </p:panelGrid>
+                    <p:commandButton actionListener="#{resumeController.update}" value="#{bundle.Save}" update="display,:ResumeListForm:ResumeListTable,:growl" oncomplete="handleSubmit(args, 'ResumeEditDialog');"/>
+                    <p:commandButton value="#{bundle.Cancel}" onclick="ResumeEditDialog.hide()"/>
+                </h:panelGroup>
+            </h:form>
+        </p:dialog>
+
+    </ui:composition>
+</html>

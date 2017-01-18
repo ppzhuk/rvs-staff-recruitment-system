@@ -34,7 +34,8 @@ import javax.validation.constraints.Size;
     , @NamedQuery(name = "Resume.findBySkills", query = "SELECT r FROM Resume r WHERE r.skills = :skills")
     , @NamedQuery(name = "Resume.findByEducation", query = "SELECT r FROM Resume r WHERE r.education = :education")
     , @NamedQuery(name = "Resume.findByDescription", query = "SELECT r FROM Resume r WHERE r.description = :description")
-    , @NamedQuery(name = "Resume.findByInSearch", query = "SELECT r FROM Resume r WHERE r.inSearch = :inSearch")})
+    , @NamedQuery(name = "Resume.findByInSearch", query = "SELECT r FROM Resume r WHERE r.inSearch = :inSearch")
+    , @NamedQuery(name = "Resume.findByApplicantId", query = "SELECT r FROM Resume r WHERE r.applicantId.id = :applicantId")})
 public class Resume implements Serializable {
 
     private static final long serialVersionUID = 1L;

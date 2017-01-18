@@ -68,6 +68,55 @@
             <ui:include src="Create_vacancy_.xhtml"/>
             <ui:include src="Edit_vacancy.xhtml"/>
             <ui:include src="View_vacancy.xhtml"/>
+            
+            <h:form id="ResumeListForm">
+                <p:panel header="Resume" >    
+                    <p:selectOneMenu value="#{resumeController.displayMode}" >
+                        <f:selectItem itemValue="all" itemLabel="all"/>
+                        <f:selectItem itemValue="unemployed" itemLabel="unemployed"/>
+                        <f:selectItem itemValue="employed" itemLabel="employed"/>
+                        <f:selectItem itemValue="own" itemLabel="own" />
+
+                        <p:ajax update="ResumeListTable"/>
+                    </p:selectOneMenu>
+                    <br/>
+                    <p:dataTable id="ResumeListTable" 
+                                 value="#{resumeController.items}" 
+                                 var="item" selectionMode="single" 
+                                 selection="#{resumeController.selected}"
+                                 paginator="true"
+                                 rowKey="#{item.id}"
+                                 rows="10"
+                                 rowsPerPageTemplate="10,20,30,40,50">
+                        
+                        <p:ajax event="rowSelect"   update="viewResumeButton editResumeButton"/>
+                        <p:ajax event="rowUnselect" update="viewResumeButton editResumeButton"/>
+     
+                        <p:column>
+                            <f:facet name="header">Id</f:facet>
+                            #{item.id}
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Name</f:facet>
+                            #{item.applicantId.personId.name}
+                        </p:column>                
+                        <p:column>
+                            <f:facet name="header">In Search</f:facet>
+                            #{item.inSearch}
+                        </p:column>                
+                                   
+                        <f:facet name="footer">
+            
+                            <p:commandButton id="viewResumeButton"   icon="ui-icon-search" value="#{bundle.View}" update=":ResumeViewForm" oncomplete="PF('ResumeViewDialog').show()" disabled="#{empty resumeController.selected}"/>
+                            <p:commandButton id="editResumeButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":ResumeEditForm" oncomplete="PF('ResumeEditDialog').show()" disabled="#{(empty loginController.loginPerson.applicant) or (resumeController.selected.applicantId.id ne loginController.loginPerson.applicant.id)}"/>
+                        </f:facet>
+                    </p:dataTable>
+                </p:panel>
+            </h:form>
+            
+            <ui:include src="View_resume.xhtml"/>
+            <ui:include src="Edit_resume.xhtml"/>
+            
         </ui:define>
     </ui:composition>
 

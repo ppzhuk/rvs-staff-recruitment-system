@@ -217,4 +217,28 @@ public class ResumeJpaController implements Serializable {
         }
     }
     
+    public List<Resume> getResumesByInSearch(boolean inSearch) {
+        EntityManager em = getEntityManager();
+        try {
+            Query query =
+                em.createNamedQuery("Resume.findByInSearch");
+            query.setParameter("inSearch", inSearch);
+            return query.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+    
+    public List<Resume> getVacanciesByApplicantId(int applicantId) {
+        EntityManager em = getEntityManager();
+        try {
+            Query query =
+                em.createNamedQuery("Resume.findByApplicantId");
+            query.setParameter("applicantId", applicantId);
+            return query.getResultList();
+
+        } finally {
+            em.close();
+        }
+    }
 }
