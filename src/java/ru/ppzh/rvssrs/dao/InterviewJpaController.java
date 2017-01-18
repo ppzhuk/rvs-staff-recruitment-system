@@ -6,6 +6,7 @@
 package ru.ppzh.rvssrs.dao;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -217,4 +218,51 @@ public class InterviewJpaController implements Serializable {
         }
     }
     
+    public List<Interview> getFutureInterviews() {
+        List<Interview> list = findInterviewEntities();
+        List<Interview> futureInterviews = new ArrayList<>();
+        for (Interview i: list) {
+            if (!i.isInterviewPassed()) {
+                futureInterviews.add(i);
+            }
+        }
+        return futureInterviews;
+    }
+    
+    public List<Interview> getPassedInterviews() {
+        List<Interview> list = findInterviewEntities();
+        List<Interview> futureInterviews = new ArrayList<>();
+        for (Interview i: list) {
+            if (i.isInterviewPassed()) {
+                futureInterviews.add(i);
+            }
+        }
+        return futureInterviews;
+    }
+    
+    public List<Interview> getInterviewsByApplicantId(int applicantId) {
+        EntityManager em = getEntityManager();
+        try {
+            Query query =
+                em.createNamedQuery("Interview.findByApplicantId");
+            query.setParameter("applicantId", applicantId);
+            return query.getResultList();
+
+        } finally {
+            em.close();
+        }
+    }
+    
+    public List<Interview> getInterviewsByEmployerId(int employerId) {
+        EntityManager em = getEntityManager();
+        try {
+            Query query =
+                em.createNamedQuery("Interview.findByEmployerId");
+            query.setParameter("employerId", employerId);
+            return query.getResultList();
+
+        } finally {
+            em.close();
+        }
+    }
 }

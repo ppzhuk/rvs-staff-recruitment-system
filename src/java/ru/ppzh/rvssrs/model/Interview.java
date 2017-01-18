@@ -31,7 +31,9 @@ import javax.validation.constraints.Size;
     , @NamedQuery(name = "Interview.findById", query = "SELECT i FROM Interview i WHERE i.id = :id")
     , @NamedQuery(name = "Interview.findByDate", query = "SELECT i FROM Interview i WHERE i.date = :date")
     , @NamedQuery(name = "Interview.findByEmployerResult", query = "SELECT i FROM Interview i WHERE i.employerResult = :employerResult")
-    , @NamedQuery(name = "Interview.findByApplicantResult", query = "SELECT i FROM Interview i WHERE i.applicantResult = :applicantResult")})
+    , @NamedQuery(name = "Interview.findByApplicantResult", query = "SELECT i FROM Interview i WHERE i.applicantResult = :applicantResult")
+    , @NamedQuery(name = "Interview.findByApplicantId", query = "SELECT i FROM Interview i WHERE i.applicantId.id = :applicantId")
+    , @NamedQuery(name = "Interview.findByEmployerId", query = "SELECT i FROM Interview i WHERE i.vacancyId.employerId.id = :employerId")})
 public class Interview implements Serializable {
     
     public static final int RESULT_POSITIVE = 1;
@@ -138,4 +140,16 @@ public class Interview implements Serializable {
         return "ru.ppzh.rvssrs.model.Interview[ id=" + id + " ]";
     }
     
+    public int getInterviewResult() {
+        if (this.applicantResult == RESULT_POSITIVE && this.employerResult == RESULT_POSITIVE) {
+            return RESULT_POSITIVE;
+        } else if (this.applicantResult == RESULT_NEGATIVE || this.employerResult == RESULT_NEGATIVE) {
+            return RESULT_NEGATIVE;
+        } 
+        return RESULT_UNDEFINED;
+    }
+    
+    public boolean isInterviewPassed() {
+        return date.compareTo(Vacancy.getToday()) < 1;
+    }
 }

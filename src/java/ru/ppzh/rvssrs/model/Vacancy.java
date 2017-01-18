@@ -7,8 +7,10 @@ package ru.ppzh.rvssrs.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.text.FieldPosition;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.regex.Pattern;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -203,4 +205,11 @@ public class Vacancy implements Serializable {
         return "ru.ppzh.rvssrs.model.Vacancy[ id=" + id + " ]";
     }
     
+    public static String getToday() {
+        return Vacancy.DATE_FORMAT.format(
+                new Date(),
+                new StringBuffer(),
+                new FieldPosition(0)
+        ).toString();
+    }
 }

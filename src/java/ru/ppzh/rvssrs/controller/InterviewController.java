@@ -6,6 +6,7 @@ import ru.ppzh.rvssrs.controller.util.JsfUtil.PersistAction;
 import ru.ppzh.rvssrs.facade.InterviewFacade;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -19,15 +20,20 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import javax.inject.Inject;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 import javax.transaction.UserTransaction;
 import ru.ppzh.rvssrs.dao.InterviewJpaController;
+import ru.ppzh.rvssrs.model.Applicant;
+import ru.ppzh.rvssrs.model.Employer;
 
 @Named("interviewController")
 @SessionScoped
 public class InterviewController implements Serializable {
 
+    @Inject private LoginController loginController;
+    
     @EJB
     private ru.ppzh.rvssrs.facade.InterviewFacade ejbFacade;
     private List<Interview> items = null;
@@ -48,6 +54,17 @@ public class InterviewController implements Serializable {
         }
     }
     
+    private String displayMode = "all";
+
+    public String getDisplayMode() {
+        return displayMode;
+    }
+
+    public void setDisplayMode(String displayMode) {
+        this.displayMode = displayMode;
+    }
+
+    
     public InterviewController() {
     }
 
@@ -59,127 +76,71 @@ public class InterviewController implements Serializable {
         this.selected = selected;
     }
 
-    protected void setEmbeddableKeys() {
-    }
-
-    protected void initializeEmbeddableKey() {
-    }
-
     private InterviewFacade getFacade() {
         return ejbFacade;
     }
 
     public Interview prepareCreate() {
         selected = new Interview();
-        initializeEmbeddableKey();
         return selected;
     }
 
     public void create() {
-        persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("InterviewCreated"));
-        if (!JsfUtil.isValidationFailed()) {
-            items = null;    // Invalidate list of items to trigger re-query.
-        }
     }
 
     public void update() {
-        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("InterviewUpdated"));
+        
     }
 
     public void destroy() {
-        persist(PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("InterviewDeleted"));
-        if (!JsfUtil.isValidationFailed()) {
-            selected = null; // Remove selection
-            items = null;    // Invalidate list of items to trigger re-query.
-        }
     }
 
     public List<Interview> getItems() {
-        if (items == null) {
-            items = getFacade().findAll();
+        InterviewJpaController dao = getDao();
+            
+        if (displayMode.equals("all")) {
+            items = dao.findInterviewEntities();
+        } else if (displayMode.equals("assigned")) {
+             items = dao.getFutureInterviews();
+        } else if (displayMode.equals("past")) {
+             items = dao.getPassedInterviews();
+        } else {
+            items = new ArrayList<Interview>();
         }
+        
+        Applicant a = loginController.getLoginPerson().getApplicant();
+        Employer e = loginController.getLoginPerson().getEmployer();
+        filterInterviews(a, e);
+            
         return items;
+    }   
+    
+    public String getInterviewResult(Interview i) {
+        if (i.getInterviewResult() == Interview.RESULT_NEGATIVE) {
+            return "NEGATIVE";
+        }
+        if (i.getInterviewResult() == Interview.RESULT_POSITIVE) {
+            return "POSITIVE";
+        }
+        return "UNDEFINED";
     }
 
-    private void persist(PersistAction persistAction, String successMessage) {
-        if (selected != null) {
-            setEmbeddableKeys();
-            try {
-                if (persistAction != PersistAction.DELETE) {
-                    getFacade().edit(selected);
-                } else {
-                    getFacade().remove(selected);
+    private void filterInterviews(Applicant a, Employer e) {
+        if (a == null && e == null) {
+            return;
+        }
+        List<Interview> newItems = new ArrayList<>();
+        for (Interview i: items) {
+            if (a != null) {
+                if (i.getApplicantId().getId() == a.getId()) {
+                    newItems.add(i);
                 }
-                JsfUtil.addSuccessMessage(successMessage);
-            } catch (EJBException ex) {
-                String msg = "";
-                Throwable cause = ex.getCause();
-                if (cause != null) {
-                    msg = cause.getLocalizedMessage();
+            } else if (e != null) {
+                if (i.getVacancyId().getEmployerId().getId() == e.getId()) {
+                    newItems.add(i);
                 }
-                if (msg.length() > 0) {
-                    JsfUtil.addErrorMessage(msg);
-                } else {
-                    JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
-                }
-            } catch (Exception ex) {
-                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-                JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
             }
         }
+        items = newItems;
     }
-
-    public Interview getInterview(java.lang.Integer id) {
-        return getFacade().find(id);
-    }
-
-    public List<Interview> getItemsAvailableSelectMany() {
-        return getFacade().findAll();
-    }
-
-    public List<Interview> getItemsAvailableSelectOne() {
-        return getFacade().findAll();
-    }
-
-    @FacesConverter(forClass = Interview.class)
-    public static class InterviewControllerConverter implements Converter {
-
-        @Override
-        public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
-            if (value == null || value.length() == 0) {
-                return null;
-            }
-            InterviewController controller = (InterviewController) facesContext.getApplication().getELResolver().
-                    getValue(facesContext.getELContext(), null, "interviewController");
-            return controller.getInterview(getKey(value));
-        }
-
-        java.lang.Integer getKey(String value) {
-            java.lang.Integer key;
-            key = Integer.valueOf(value);
-            return key;
-        }
-
-        String getStringKey(java.lang.Integer value) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(value);
-            return sb.toString();
-        }
-
-        @Override
-        public String getAsString(FacesContext facesContext, UIComponent component, Object object) {
-            if (object == null) {
-                return null;
-            }
-            if (object instanceof Interview) {
-                Interview o = (Interview) object;
-                return getStringKey(o.getId());
-            } else {
-                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), Interview.class.getName()});
-                return null;
-            }
-        }
-
-    }
-
 }

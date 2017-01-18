@@ -117,6 +117,64 @@
             <ui:include src="View_resume.xhtml"/>
             <ui:include src="Edit_resume.xhtml"/>
             
+            <h:form id="InterviewListForm">
+                <p:panel header="Interview" >    
+                    <p:selectOneMenu value="#{interviewController.displayMode}" >
+                        <f:selectItem itemValue="all" itemLabel="all"/>
+                        <f:selectItem itemValue="assigned" itemLabel="assigned"/>
+                        <f:selectItem itemValue="past" itemLabel="past"/>
+
+                        <p:ajax update="InterviewListTable"/>
+                    </p:selectOneMenu>
+                    <br/>
+                    <p:dataTable id="InterviewListTable" 
+                                 value="#{interviewController.items}" 
+                                 var="item" selectionMode="single" 
+                                 selection="#{interviewController.selected}"
+                                 paginator="true"
+                                 rowKey="#{item.id}"
+                                 rows="10"
+                                 rowsPerPageTemplate="10,20,30,40,50">
+                        
+<!--                        <p:ajax event="rowSelect"   update="viewInterviewButton editInterviewButton"/>
+                        <p:ajax event="rowUnselect" update="viewInterviewButton editInterviewButton"/>
+     -->
+                        <p:column>
+                            <f:facet name="header">Id</f:facet>
+                            #{item.id}
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">Applicant Name</f:facet>
+                            #{item.applicantId.personId.name}
+                        </p:column>                
+                        <p:column>
+                            <f:facet name="header">Position</f:facet>
+                            #{item.vacancyId.position}
+                        </p:column>                
+                        <p:column>
+                            <f:facet name="header">Company Name</f:facet>
+                            #{item.vacancyId.employerId.companyName}
+                        </p:column>                
+                        <p:column>
+                            <f:facet name="header">Close Date</f:facet>
+                            #{item.date}
+                        </p:column>                
+                        <p:column>
+                            <f:facet name="header">Result</f:facet>
+                            #{interviewController.getInterviewResult(item)}
+                        </p:column>                
+                        <f:facet name="footer">
+            
+<!--                            <p:commandButton id="viewInterviewButton"   icon="ui-icon-search" value="#{bundle.View}" update=":InterviewViewForm" oncomplete="PF('InterviewViewDialog').show()" disabled="#{empty resumeController.selected}"/>
+                            <p:commandButton id="editInterviewButton"   icon="ui-icon-pencil" value="#{bundle.Edit}" update=":InterviewEditForm" oncomplete="PF('InterviewEditDialog').show()" disabled="#{(empty loginController.loginPerson.applicant) or (resumeController.selected.applicantId.id ne loginController.loginPerson.applicant.id)}"/>-->
+                        </f:facet>
+                    </p:dataTable>
+                </p:panel>
+            </h:form>
+            
+<!--            <ui:include src="View_resume.xhtml"/>
+            <ui:include src="Edit_resume.xhtml"/>-->
+            
         </ui:define>
     </ui:composition>
 
