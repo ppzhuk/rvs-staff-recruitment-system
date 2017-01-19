@@ -174,4 +174,13 @@ public class Resume implements Serializable {
         return "ru.ppzh.rvssrs.model.Resume[ id=" + id + " ]";
     }
     
+    public void resetInSearch() {
+        vacancyId = null;
+        inSearch = true;
+    }
+
+    public void closeResume(Vacancy v) {
+        this.vacancyId = v;
+        this.inSearch = false;
+    }
 }

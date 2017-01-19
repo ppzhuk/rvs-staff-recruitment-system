@@ -143,7 +143,9 @@ public class Interview implements Serializable {
     public int getInterviewResult() {
         if (this.applicantResult == RESULT_POSITIVE && this.employerResult == RESULT_POSITIVE) {
             return RESULT_POSITIVE;
-        } else if (this.applicantResult == RESULT_NEGATIVE || this.employerResult == RESULT_NEGATIVE) {
+        } else if ((this.applicantResult == RESULT_NEGATIVE && this.employerResult == RESULT_POSITIVE) ||
+                   (this.employerResult == RESULT_NEGATIVE && this.applicantResult == RESULT_POSITIVE) ||
+                   (this.employerResult == RESULT_NEGATIVE && this.applicantResult == RESULT_NEGATIVE)) {
             return RESULT_NEGATIVE;
         } 
         return RESULT_UNDEFINED;

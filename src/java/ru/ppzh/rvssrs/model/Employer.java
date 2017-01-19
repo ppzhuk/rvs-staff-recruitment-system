@@ -147,5 +147,5 @@ public class Employer implements Serializable {
     public String toString() {
         return "ru.ppzh.rvssrs.model.Employer[ id=" + id + " ]";
     }
-    
+ 
 }

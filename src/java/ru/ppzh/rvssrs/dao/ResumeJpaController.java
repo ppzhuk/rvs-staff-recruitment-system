@@ -95,6 +95,7 @@ public class ResumeJpaController implements Serializable {
                 resume.setVacancyId(vacancyIdNew);
             }
             resume = em.merge(resume);
+            System.out.println("resume with id: " + resume.getId() + " merged!");
             if (applicantIdOld != null && !applicantIdOld.equals(applicantIdNew)) {
                 applicantIdOld.getResumeCollection().remove(resume);
                 applicantIdOld = em.merge(applicantIdOld);
@@ -108,6 +109,7 @@ public class ResumeJpaController implements Serializable {
                 vacancyIdOld = em.merge(vacancyIdOld);
             }
             if (vacancyIdNew != null && !vacancyIdNew.equals(vacancyIdOld)) {
+                System.out.println("vacancy with id: " + vacancyIdNew.getId() + " merged!");
                 vacancyIdNew.getResumeCollection().add(resume);
                 vacancyIdNew = em.merge(vacancyIdNew);
             }

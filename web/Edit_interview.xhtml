@@ -26,19 +26,19 @@
                     <p:panelGrid columns="2" rendered="#{interviewController.selected != null}">
                         <p:outputLabel for="employerResult" value="Employer result" />
                         <p:selectOneRadio id="employerResult" value="#{interviewController.selected.employerResult}"
-                                          disabled="#{(not interviewController.selected.interviewPassed) or (empty loginController.loginPerson.employer)}">
+                                          disabled="#{interviewController.setEmployerResultDisabled}">
                             <f:selectItem itemLabel="Positive" itemValue="1" />
                             <f:selectItem itemLabel="Negative" itemValue="-1" />
                         </p:selectOneRadio>
                         <p:outputLabel for="applicantResult" value="Applicant result" />
                         <p:selectOneRadio id="applicantResult" value="#{interviewController.selected.applicantResult}"
-                                          disabled="#{(not interviewController.selected.interviewPassed) or (empty loginController.loginPerson.applicant)}">
+                                          disabled="#{interviewController.setAplicantResultDisabled}">
                             <f:selectItem itemLabel="Positive" itemValue="1" />
                             <f:selectItem itemLabel="Negative" itemValue="-1" />
                         </p:selectOneRadio>
                     </p:panelGrid>
                     <p:commandButton actionListener="#{interviewController.update}" value="#{bundle.Save}" update="display,:InterviewListForm:InterviewListTable,:growl" oncomplete="handleSubmit(args, 'InterviewEditDialog');"/>
-                    <p:commandButton value="#{bundle.Cancel}" onclick="InterviewEditDialog.hide()"/>
+                    
                 </h:panelGroup>
             </h:form>
         </p:dialog>

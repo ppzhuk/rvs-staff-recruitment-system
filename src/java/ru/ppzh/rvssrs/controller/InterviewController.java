@@ -25,8 +25,13 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 import javax.transaction.UserTransaction;
 import ru.ppzh.rvssrs.dao.InterviewJpaController;
+import ru.ppzh.rvssrs.dao.ResumeJpaController;
+import ru.ppzh.rvssrs.dao.VacancyJpaController;
+import ru.ppzh.rvssrs.dao.exceptions.RollbackFailureException;
 import ru.ppzh.rvssrs.model.Applicant;
 import ru.ppzh.rvssrs.model.Employer;
+import ru.ppzh.rvssrs.model.Resume;
+import ru.ppzh.rvssrs.model.Vacancy;
 
 @Named("interviewController")
 @SessionScoped
@@ -45,12 +50,32 @@ public class InterviewController implements Serializable {
     UserTransaction utx;
     
     private InterviewJpaController dao = null;
+    private ResumeJpaController resumeDao = null;
+    private VacancyJpaController vacancyDao = null;
     
     public InterviewJpaController getDao() {
         if (dao == null) {
             return new InterviewJpaController(utx, emf);
         } else {
             return dao;
+        }
+    }
+    
+    
+    public ResumeJpaController getResumeDao() {
+        if (resumeDao == null) {
+            return new ResumeJpaController(utx, emf);
+        } else {
+            return resumeDao;
+        }
+    }
+    
+    
+    public VacancyJpaController getVacancyDao() {
+        if (vacancyDao == null) {
+            return new VacancyJpaController(utx, emf);
+        } else {
+            return vacancyDao;
         }
     }
     
@@ -88,8 +113,29 @@ public class InterviewController implements Serializable {
     public void create() {
     }
 
-    public void update() {
+    public void update() throws RollbackFailureException, Exception {
+        if (selected.getApplicantResult() == null) {
+            selected.setApplicantResult(Interview.RESULT_UNDEFINED);
+        }
+        if (selected.getEmployerResult() == null) {
+            selected.setEmployerResult(Interview.RESULT_UNDEFINED);
+        }
         
+        getDao().edit(selected);
+        
+        if (selected.getInterviewResult() == Interview.RESULT_POSITIVE) {
+       
+                Resume r = selected.getApplicantId().getResumeCollection().iterator().next();
+                Vacancy v = selected.getVacancyId();
+                
+                r.closeResume(v);
+                getResumeDao().edit(r);
+                v.closeVacancy(selected.getApplicantId());
+                v.getResumeCollection().add(r);
+                getVacancyDao().edit(v);
+        }
+        
+            
     }
 
     public void destroy() {
@@ -142,5 +188,23 @@ public class InterviewController implements Serializable {
             }
         }
         items = newItems;
+    }
+    
+    public boolean isSetEmployerResultDisabled() {
+        if (selected == null) {
+            return true;
+        }
+        return selected.getEmployerResult() != Interview.RESULT_UNDEFINED ||
+                !selected.isInterviewPassed() || 
+                loginController.getLoginPerson().getApplicant() != null;
+    }
+    
+    public boolean isSetAplicantResultDisabled() {
+        if (selected == null) {
+            return true;
+        }
+        return selected.getApplicantResult() != Interview.RESULT_UNDEFINED ||
+                !selected.isInterviewPassed() || 
+                loginController.getLoginPerson().getEmployer() != null;
     }
 }

@@ -212,4 +212,10 @@ public class Vacancy implements Serializable {
                 new FieldPosition(0)
         ).toString();
     }
+    
+    public void closeVacancy(Applicant a) {
+        this.status = STATUS_CLOSE;
+        this.applicantId = status == STATUS_OPEN ? null : a;
+        this.closeDate = getToday();
+    }
 }
