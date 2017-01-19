@@ -122,4 +122,8 @@ public class Applicant implements Serializable {
     public String toString() {
         return "[ id= " + id + ", name= " + this.personId.getName() + ", inSearch= " + this.resumeCollection.iterator().next().getInSearch() + " ]";
     }
+    
+    public Resume getResume() {
+        return this.resumeCollection.iterator().next();
+    }
 }

@@ -121,11 +121,7 @@ public class InterviewController implements Serializable {
 
     public void update() throws RollbackFailureException, Exception {
         Interview oldInterview = getDao().findInterview(selected.getId());
-        if (oldInterview.getApplicantResult() != resultApplicantOld ||
-                oldInterview.getEmployerResult() != resultEmployerOld) {
-            FacesContext context = FacesContext.getCurrentInstance();
-         
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Interview can't be updated",  "Try again.") );
+        if (isConcurrentModification(oldInterview)) {
             return;
         }
         
@@ -138,6 +134,10 @@ public class InterviewController implements Serializable {
 
         getDao().edit(selected);
 
+        if (isApplicantEmployed(oldInterview) || isVacancyClosed(oldInterview)) {
+            return;
+        }
+        
         if (selected.getInterviewResult() == Interview.RESULT_POSITIVE) {
 
                 Resume r = selected.getApplicantId().getResumeCollection().iterator().next();
@@ -151,6 +151,38 @@ public class InterviewController implements Serializable {
         }
     }
 
+    public boolean isConcurrentModification(Interview oldInterview) {
+        
+        if (oldInterview.getApplicantResult() != resultApplicantOld ||
+                oldInterview.getEmployerResult() != resultEmployerOld) {
+            FacesContext context = FacesContext.getCurrentInstance();
+         
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Interview can't be updated",  "Try again.") );
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean isApplicantEmployed(Interview oldInterview) {
+        if (!oldInterview.getApplicantId().getResume().getInSearch()) {
+         FacesContext context = FacesContext.getCurrentInstance();
+         
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Applicant is employed. Changes dismissed",  "Changes dismissed") );
+            return true;
+        }
+        return false;
+    }
+    
+    public boolean isVacancyClosed(Interview oldInterview) {
+        if (!oldInterview.getVacancyId().isOpen()) {
+         FacesContext context = FacesContext.getCurrentInstance();
+         
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Vacancy is closed. Changes dismissed",  "Changes dismissed") );
+            return true;
+        }
+        return false;
+    }
+    
     public void destroy() {
     }
 
