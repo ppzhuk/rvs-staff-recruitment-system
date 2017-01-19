@@ -165,7 +165,7 @@
                         </p:column>                
                         <f:facet name="footer">
             
-                            <p:commandButton id="editInterviewButton"   icon="ui-icon-pencil" value="View/Set Result" update=":InterviewEditForm" oncomplete="PF('InterviewEditDialog').show()" disabled="#{empty interviewController.selected}"/>
+                            <p:commandButton id="editInterviewButton"  actionListener="#{interviewController.prepareUpdate}"  icon="ui-icon-pencil" value="View/Set Result" update=":InterviewEditForm" oncomplete="PF('InterviewEditDialog').show()" disabled="#{empty interviewController.selected}"/>
                         </f:facet>
                     </p:dataTable>
                 </p:panel>

@@ -16,6 +16,7 @@ import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
@@ -114,28 +115,35 @@ public class InterviewController implements Serializable {
     }
 
     public void update() throws RollbackFailureException, Exception {
+        Interview oldInterview = getDao().findInterview(selected.getId());
+        if (oldInterview.getApplicantResult() != resultApplicantOld ||
+                oldInterview.getEmployerResult() != resultEmployerOld) {
+            FacesContext context = FacesContext.getCurrentInstance();
+         
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Interview can't be updated",  "Try again.") );
+            return;
+        }
+        
         if (selected.getApplicantResult() == null) {
             selected.setApplicantResult(Interview.RESULT_UNDEFINED);
         }
         if (selected.getEmployerResult() == null) {
             selected.setEmployerResult(Interview.RESULT_UNDEFINED);
         }
-        
+
         getDao().edit(selected);
-        
+
         if (selected.getInterviewResult() == Interview.RESULT_POSITIVE) {
-       
+
                 Resume r = selected.getApplicantId().getResumeCollection().iterator().next();
                 Vacancy v = selected.getVacancyId();
-                
+
                 r.closeResume(v);
                 getResumeDao().edit(r);
                 v.closeVacancy(selected.getApplicantId());
                 v.getResumeCollection().add(r);
                 getVacancyDao().edit(v);
         }
-        
-            
     }
 
     public void destroy() {
@@ -206,5 +214,13 @@ public class InterviewController implements Serializable {
         return selected.getApplicantResult() != Interview.RESULT_UNDEFINED ||
                 !selected.isInterviewPassed() || 
                 loginController.getLoginPerson().getEmployer() != null;
+    }
+    
+    private Integer resultApplicantOld = null;
+    private Integer resultEmployerOld = null;
+    
+    public void prepareUpdate() {
+        resultApplicantOld = selected.getApplicantResult();
+        resultEmployerOld = selected.getEmployerResult();
     }
 }
