@@ -10,6 +10,10 @@ import javax.annotation.Resource;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.convert.Converter;
+import javax.faces.convert.FacesConverter;
 import javax.inject.Inject;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
@@ -17,6 +21,7 @@ import javax.transaction.UserTransaction;
 import ru.ppzh.rvssrs.dao.PersonJpaController;
 import ru.ppzh.rvssrs.dao.VacancyJpaController;
 import ru.ppzh.rvssrs.dao.exceptions.RollbackFailureException;
+import ru.ppzh.rvssrs.facade.VacancyFacade;
 import ru.ppzh.rvssrs.model.Employer;
 import ru.ppzh.rvssrs.model.Person;
 import ru.ppzh.rvssrs.model.Vacancy;
@@ -173,4 +178,67 @@ public class VacancyController implements Serializable {
         System.out.println(sb.toString());
     }
     
+    private List<Vacancy> openVacancies;
+    
+    public List<Vacancy> getOpenVacancies() {
+        openVacancies = getDao().getOpenVacancies();
+        return openVacancies;
+    }
+    
+    public Vacancy getVacancy(java.lang.Integer id) {
+        return getFacade().find(id);
+    }
+
+    public List<Vacancy> getItemsAvailableSelectMany() {
+        return getFacade().findAll();
+    }
+
+    public List<Vacancy> getItemsAvailableSelectOne() {
+        return getFacade().findAll();
+    }
+    
+    private VacancyFacade getFacade() {
+        return ejbFacade;
+    }
+
+    @FacesConverter(forClass = Vacancy.class)
+    public static class VacancyControllerConverter implements Converter {
+
+        @Override
+        public Object getAsObject(FacesContext facesContext, UIComponent component, String value) {
+            if (value == null || value.length() == 0) {
+                return null;
+            }
+            VacancyController controller = (VacancyController) facesContext.getApplication().getELResolver().
+                    getValue(facesContext.getELContext(), null, "vacancyController");
+            return controller.getVacancy(getKey(value));
+        }
+
+        java.lang.Integer getKey(String value) {
+            java.lang.Integer key;
+            key = Integer.valueOf(value);
+            return key;
+        }
+
+        String getStringKey(java.lang.Integer value) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(value);
+            return sb.toString();
+        }
+
+        @Override
+        public String getAsString(FacesContext facesContext, UIComponent component, Object object) {
+            if (object == null) {
+                return null;
+            }
+            if (object instanceof Vacancy) {
+                Vacancy o = (Vacancy) object;
+                return getStringKey(o.getId());
+            } else {
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "object {0} is of type {1}; expected type: {2}", new Object[]{object, object.getClass().getName(), Vacancy.class.getName()});
+                return null;
+            }
+        }
+
+    }
 }

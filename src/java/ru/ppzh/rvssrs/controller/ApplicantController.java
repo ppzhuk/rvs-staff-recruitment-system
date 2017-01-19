@@ -182,4 +182,11 @@ public class ApplicantController implements Serializable {
 
     }
 
+    private List<Applicant> freeApplicants;
+    
+    public List<Applicant> getFreeApplicants() {
+        freeApplicants = getDao().getFreeApplicants();
+        return freeApplicants;
+    }
+    
 }

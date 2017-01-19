@@ -120,7 +120,6 @@ public class Applicant implements Serializable {
 
     @Override
     public String toString() {
-        return "ru.ppzh.rvssrs.model.Applicant[ id=" + id + " ]";
+        return "[ id= " + id + ", name= " + this.personId.getName() + ", inSearch= " + this.resumeCollection.iterator().next().getInSearch() + " ]";
     }
-    
 }

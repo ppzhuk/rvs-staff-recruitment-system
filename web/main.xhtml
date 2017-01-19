@@ -136,8 +136,8 @@
                                  rows="10"
                                  rowsPerPageTemplate="10,20,30,40,50">
                         
-                        <p:ajax event="rowSelect"   update="editInterviewButton"/>
-                        <p:ajax event="rowUnselect" update="editInterviewButton"/>
+                        <p:ajax event="rowSelect"   update="editInterviewButton createInterviewButton"/>
+                        <p:ajax event="rowUnselect" update="editInterviewButton createInterviewButton"/>
      
                         <p:column>
                             <f:facet name="header">Id</f:facet>
@@ -165,12 +165,15 @@
                         </p:column>                
                         <f:facet name="footer">
             
+                            <p:commandButton id="createInterviewButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{interviewController.prepareCreate}" update=":InterviewCreateForm" oncomplete="PF('InterviewCreateDialog').show()" disabled="#{empty loginController.loginPerson.manager}"/>
                             <p:commandButton id="editInterviewButton"  actionListener="#{interviewController.prepareUpdate}"  icon="ui-icon-pencil" value="View/Set Result" update=":InterviewEditForm" oncomplete="PF('InterviewEditDialog').show()" disabled="#{empty interviewController.selected}"/>
+
                         </f:facet>
                     </p:dataTable>
                 </p:panel>
             </h:form>
             
+            <ui:include src="Create_interview.xhtml"/>
             <ui:include src="Edit_interview.xhtml"/>
             
         </ui:define>

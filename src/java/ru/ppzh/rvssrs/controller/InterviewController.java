@@ -112,6 +112,11 @@ public class InterviewController implements Serializable {
     }
 
     public void create() {
+        try {
+                getDao().create(selected);
+            } catch (Exception ex) {
+                Logger.getLogger(VacancyController.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }
 
     public void update() throws RollbackFailureException, Exception {

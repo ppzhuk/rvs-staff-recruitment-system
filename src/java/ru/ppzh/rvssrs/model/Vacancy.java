@@ -202,7 +202,7 @@ public class Vacancy implements Serializable {
 
     @Override
     public String toString() {
-        return "ru.ppzh.rvssrs.model.Vacancy[ id=" + id + " ]";
+        return "[ id= " + id + ", position= " + this.position + ", companyName= " + this.employerId.getCompanyName() + ", status= " + this.getStatusText() + " ]";
     }
     
     public static String getToday() {
@@ -217,5 +217,16 @@ public class Vacancy implements Serializable {
         this.status = STATUS_CLOSE;
         this.applicantId = status == STATUS_OPEN ? null : a;
         this.closeDate = getToday();
+    }
+    
+    public boolean isOpen() {
+        return status == STATUS_OPEN;
+    }
+
+    private String getStatusText() {
+        if (this.status == Vacancy.STATUS_CLOSE) {
+            return "CLOSE";
+        }
+        return "OPEN";
     }
 }

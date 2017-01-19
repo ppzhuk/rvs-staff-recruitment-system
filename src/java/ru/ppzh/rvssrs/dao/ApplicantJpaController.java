@@ -376,4 +376,15 @@ public class ApplicantJpaController implements Serializable {
         }
     }
     
+    public List<Applicant> getFreeApplicants() {
+       List<Applicant> list = findApplicantEntities();
+       List<Applicant> newList = new ArrayList<>();
+       for (Applicant a: list) {
+           if (a.getResumeCollection().iterator().next().getInSearch()) {
+               newList.add(a);
+           }
+       }
+       return newList;
+    }
+    
 }
