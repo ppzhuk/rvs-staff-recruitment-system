@@ -63,12 +63,10 @@ public class VacancyController implements Serializable {
     private Vacancy selected;
 
     public Vacancy getSelected() {
-        log("getSelected");
         return selected;
     }
 
     public void setSelected(Vacancy selected) {
-        log("setSelected");
         this.selected = selected;
     }
     
@@ -167,16 +165,7 @@ public class VacancyController implements Serializable {
         }
     }
     
-    public void log(String name) {
-        StringBuilder sb = new StringBuilder("");
-        sb.append(name + "  -  ");
-        if (selected != null) {
-            sb.append("selected: " + selected.toString() + ", ");
-        } else {
-            sb.append("selected: " + null + ", ");
-        }
-        System.out.println(sb.toString());
-    }
+   
     
     private List<Vacancy> openVacancies;
     

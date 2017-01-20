@@ -134,7 +134,9 @@ public class InterviewController implements Serializable {
 
         getDao().edit(selected);
 
-        if (isApplicantEmployed(oldInterview) || isVacancyClosed(oldInterview)) {
+        if (isInterviewWithoutVacancy() ||
+                isApplicantEmployed(oldInterview) ||
+                isVacancyClosed(oldInterview)) {
             return;
         }
         
@@ -183,7 +185,24 @@ public class InterviewController implements Serializable {
         return false;
     }
     
+    public boolean isInterviewWithoutVacancy() {
+        if (selected.getVacancyId() == null) {
+            FacesContext context = FacesContext.getCurrentInstance();
+         
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Vacancy is deleted. Changes dismissed",  "Changes dismissed") );
+            return true;
+        }
+        return false;
+    }
+    
     public void destroy() {
+        try {
+            getDao().destroy(selected.getId());
+        } catch (RollbackFailureException ex) {
+            Logger.getLogger(InterviewController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(InterviewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public List<Interview> getItems() {
@@ -227,6 +246,9 @@ public class InterviewController implements Serializable {
                     newItems.add(i);
                 }
             } else if (e != null) {
+                if (i.getVacancyId() == null) {
+                    continue;
+                }
                 if (i.getVacancyId().getEmployerId().getId() == e.getId()) {
                     newItems.add(i);
                 }
