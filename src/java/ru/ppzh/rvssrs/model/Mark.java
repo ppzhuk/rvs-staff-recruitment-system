@@ -32,7 +32,8 @@ import javax.validation.constraints.Size;
     , @NamedQuery(name = "Mark.findById", query = "SELECT m FROM Mark m WHERE m.id = :id")
     , @NamedQuery(name = "Mark.findByManagerId", query = "SELECT m FROM Mark m WHERE m.managerId = :managerId")
     , @NamedQuery(name = "Mark.findByMark", query = "SELECT m FROM Mark m WHERE m.mark = :mark")
-    , @NamedQuery(name = "Mark.findByComment", query = "SELECT m FROM Mark m WHERE m.comment = :comment")})
+    , @NamedQuery(name = "Mark.findByComment", query = "SELECT m FROM Mark m WHERE m.comment = :comment")
+    , @NamedQuery(name = "Mark.findByEvaluatedPersonId", query = "SELECT m FROM Mark m WHERE m.evaluatedPersonId = :evaluatedPersonId")})
 public class Mark implements Serializable {
     public static final double SATISFACTORY_MARK = 3.0;
     

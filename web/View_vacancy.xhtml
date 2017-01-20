@@ -35,7 +35,36 @@
                     </p:panelGrid>
                     
                         <br/>
-                        <h:outputText value="todo: add employer marks here"/>
+                        <h:panelGroup id="marks_employer" rendered="#{not empty loginController.loginPerson.manager}">
+                            <h3>Feedback</h3>
+                            <p:panelGrid columns="2">
+                                <h:outputText value="Company Name:"/>
+                                <h:outputText value="#{vacancyController.selected.employerId.companyName}" />
+                                <h:outputText value="Average mark:"/>
+                                <h:outputText value="#{vacancyController.avgMark}" />
+                            </p:panelGrid>
+                            <p:dataTable id="MarkListTable_vacancy" value="#{vacancyController.marks}" var="item" 
+                                 selectionMode="single" selection="#{vacancyController.selected_mark}"
+                                 paginator="true"
+                                 rowKey="#{item.id}"
+                                 rows="10"
+                                 rowsPerPageTemplate="10,20,30,40,50"
+                                 style="width:300px;"
+                                 >
+                                <p:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundle.ListMarkTitle_mark}"/>
+                                    </f:facet>
+                                    <h:outputText value="#{item.mark}"/>
+                                </p:column>
+                                <p:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundle.ListMarkTitle_comment}"/>
+                                    </f:facet>
+                                    <h:outputText value="#{item.comment}"/>
+                                </p:column>
+                            </p:dataTable>  
+                        </h:panelGroup>
                         <br/>
                         
                     <p:commandButton value="#{bundle.Close}" onclick="VacancyViewDialog.hide()"/>

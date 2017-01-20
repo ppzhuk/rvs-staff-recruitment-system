@@ -18,12 +18,14 @@ import javax.inject.Inject;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 import javax.transaction.UserTransaction;
+import ru.ppzh.rvssrs.dao.MarkJpaController;
 import ru.ppzh.rvssrs.dao.PersonJpaController;
 import ru.ppzh.rvssrs.dao.ResumeJpaController;
 import ru.ppzh.rvssrs.dao.VacancyJpaController;
 import ru.ppzh.rvssrs.dao.exceptions.RollbackFailureException;
 import ru.ppzh.rvssrs.facade.VacancyFacade;
 import ru.ppzh.rvssrs.model.Employer;
+import ru.ppzh.rvssrs.model.Mark;
 import ru.ppzh.rvssrs.model.Person;
 import ru.ppzh.rvssrs.model.Resume;
 import ru.ppzh.rvssrs.model.Vacancy;
@@ -69,6 +71,16 @@ public class VacancyController implements Serializable {
             return new ResumeJpaController(utx, emf);
         } else {
             return resumeDao;
+        }
+    }
+    
+    private MarkJpaController markDao = null;
+    
+    public MarkJpaController getMarkDao() {
+        if (markDao == null) {
+            return new MarkJpaController(utx, emf);
+        } else {
+            return markDao;
         }
     }
     
@@ -123,12 +135,50 @@ public class VacancyController implements Serializable {
         this.vacancies = vacancies;
     }
 
+    private Double avgMark;
+
+    public Double getAvgMark() {
+        if (selected != null) {
+            Person p = selected.getEmployerId().getPersonId();
+            List<Mark> marks = getMarkDao().getMarksByEvaluatedPersonId(p);
+            avgMark = p.getAverageMark(marks);
+        }
+        return avgMark;
+    }
+
+    public void setAvgMark(Double avgMark) {
+        this.avgMark = avgMark;
+    }
 
     
     public VacancyController() {
     }
     
+    private Mark selected_mark;
 
+    public Mark getSelected_mark() {
+        return selected_mark;
+    }
+
+    public void setSelected_mark(Mark selected_mark) {
+        this.selected_mark = selected_mark;
+    }
+
+    private List<Mark> marks;
+
+    public List<Mark> getMarks() {
+        if (selected != null) {
+            Person p = selected.getEmployerId().getPersonId();
+            marks = getMarkDao().getMarksByEvaluatedPersonId(p);
+        }
+        return marks;
+    }
+
+    public void setMarks(List<Mark> marks) {
+        this.marks = marks;
+    }
+
+    
     public String getDisplayMode() {
         return displayMode;
     }

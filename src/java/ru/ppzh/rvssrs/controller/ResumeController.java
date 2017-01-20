@@ -24,10 +24,13 @@ import javax.inject.Inject;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 import javax.transaction.UserTransaction;
+import ru.ppzh.rvssrs.dao.MarkJpaController;
 import ru.ppzh.rvssrs.dao.ResumeJpaController;
 import ru.ppzh.rvssrs.dao.VacancyJpaController;
 import ru.ppzh.rvssrs.dao.exceptions.RollbackFailureException;
 import ru.ppzh.rvssrs.model.Applicant;
+import ru.ppzh.rvssrs.model.Mark;
+import ru.ppzh.rvssrs.model.Person;
 import ru.ppzh.rvssrs.model.Vacancy;
 
 @Named("resumeController")
@@ -58,6 +61,16 @@ public class ResumeController implements Serializable {
         }
     }
     
+    private MarkJpaController markDao = null;
+    
+    public MarkJpaController getMarkDao() {
+        if (markDao == null) {
+            return new MarkJpaController(utx, emf);
+        } else {
+            return markDao;
+        }
+    }
+    
     private VacancyJpaController vacancyDao = null;
     
     public VacancyJpaController getVacancyDao() {
@@ -68,7 +81,49 @@ public class ResumeController implements Serializable {
         }
     }
 
+    private Double avgMark;
 
+    public Double getAvgMark() {
+        if (selected != null) {
+            Person p = selected.getApplicantId().getPersonId();
+            List<Mark> marks = getMarkDao().getMarksByEvaluatedPersonId(
+                    p
+            );
+            avgMark = p.getAverageMark(marks);
+        }
+        return avgMark;
+    }
+
+    public void setAvgMark(Double avgMark) {
+        this.avgMark = avgMark;
+    }
+    
+    private List<Mark> marks;
+
+    public List<Mark> getMarks() {
+        if (selected != null) {
+            Person p = selected.getApplicantId().getPersonId();
+            marks = getMarkDao().getMarksByEvaluatedPersonId(
+                    p
+            );
+        }
+        return marks;
+    }
+
+        private Mark selected_mark;
+
+    public Mark getSelected_mark() {
+        return selected_mark;
+    }
+
+    public void setSelected_mark(Mark selected_mark) {
+        this.selected_mark = selected_mark;
+    }
+
+    
+    public void setMarks(List<Mark> marks) {
+        this.marks = marks;
+    }
     
     public String getDisplayMode() {
         return displayMode;

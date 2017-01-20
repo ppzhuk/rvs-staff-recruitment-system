@@ -33,6 +33,40 @@
                         <h:outputText value="Email"/>
                         <h:outputText value="#{resumeController.selected.applicantId.personId.email}" title="Email"/>
                     </p:panelGrid>
+                    
+                    <br/>
+                    <h:panelGroup id="marks_aplcnt" rendered="#{not empty loginController.loginPerson.manager}">
+                            <h3>Feedback</h3>
+                            <p:panelGrid columns="2">
+                                <h:outputText value="Applicant name:"/>
+                                <h:outputText value="#{resumeController.selected.applicantId.personId.name}" />
+                                <h:outputText value="Average mark:"/>
+                                <h:outputText value="#{resumeController.avgMark}" />
+                            </p:panelGrid>
+                            <p:dataTable id="MarkListTable_resume" value="#{resumeController.marks}" var="item" 
+                                 selectionMode="single" selection="#{resumeController.selected_mark}"
+                                 paginator="true"
+                                 rowKey="#{item.id}"
+                                 rows="10"
+                                 rowsPerPageTemplate="10,20,30,40,50"
+                                 style="width:300px;"
+                                 >
+                                <p:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundle.ListMarkTitle_mark}"/>
+                                    </f:facet>
+                                    <h:outputText value="#{item.mark}"/>
+                                </p:column>
+                                <p:column>
+                                    <f:facet name="header">
+                                        <h:outputText value="#{bundle.ListMarkTitle_comment}"/>
+                                    </f:facet>
+                                    <h:outputText value="#{item.comment}"/>
+                                </p:column>
+                            </p:dataTable>  
+                        </h:panelGroup>
+                        <br/>
+                    
                     <p:commandButton value="#{bundle.Close}" onclick="ResumeViewDialog.hide()"/>
                 </h:panelGroup>
             </h:form>

@@ -62,7 +62,7 @@ public class MarkController implements Serializable {
     public void setSelected(Mark selected) {
         this.selected = selected;
     }
-
+    
     protected void setEmbeddableKeys() {
     }
 

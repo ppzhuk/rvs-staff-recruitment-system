@@ -7,6 +7,7 @@ package ru.ppzh.rvssrs.model;
 
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -203,4 +204,14 @@ public class Person implements Serializable {
         return "[ id= " + id + ", name= " + name + "]";
     }
     
+    public double getAverageMark(List<Mark> marks) {
+        if (marks.size() == 0) {
+            return 0.0;
+        }
+        int sum = 0;
+        for (Mark m: marks) {
+            sum += m.getMark();
+        }
+        return (sum*1.0)/(marks.size()*1.0);
+    }
 }
