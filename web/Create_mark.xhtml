@@ -13,6 +13,14 @@
                 <h:panelGroup id="display">
                      <p:panelGrid columns="2" rendered="#{markController.selected != null}">
                         
+                        <p:outputLabel value="#{bundle.EditMarkLabel_evaluatedPersonId}" for="evaluatedPersonId" />
+                        <p:selectOneMenu id="evaluatedPersonId" value="#{markController.selected.evaluatedPersonId}" required="true" requiredMessage="#{bundle.EditMarkRequiredMessage_evaluatedPersonId}">
+                            <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
+                            <f:selectItems value="#{personController.evaluatedPersons}"
+                                           var="evaluatedPersonIdItem"
+                                           itemValue="#{evaluatedPersonIdItem}"/>
+                        </p:selectOneMenu>
+                         
                         <p:outputLabel value="#{bundle.EditMarkLabel_mark}" for="mark" />
                         <p:inputText id="mark" value="#{markController.selected.mark}" title="#{bundle.EditMarkTitle_mark}" required="true" requiredMessage="#{bundle.EditMarkRequiredMessage_mark}">
                             <f:validator validatorId="markValidator"/>
@@ -21,13 +29,7 @@
                         <p:outputLabel value="#{bundle.EditMarkLabel_comment}" for="comment" />
                         <p:inputText id="comment" value="#{markController.selected.comment}" title="#{bundle.EditMarkTitle_comment}" />
                         
-                        <p:outputLabel value="#{bundle.EditMarkLabel_evaluatedPersonId}" for="evaluatedPersonId" />
-                        <p:selectOneMenu id="evaluatedPersonId" value="#{markController.selected.evaluatedPersonId}" required="true" requiredMessage="#{bundle.EditMarkRequiredMessage_evaluatedPersonId}">
-                            <f:selectItem itemLabel="#{bundle.SelectOneMessage}"/>
-                            <f:selectItems value="#{personController.evaluatedPersons}"
-                                           var="evaluatedPersonIdItem"
-                                           itemValue="#{evaluatedPersonIdItem}"/>
-                        </p:selectOneMenu>
+                        
                     </p:panelGrid>
                     <p:commandButton actionListener="#{markController.create}" value="#{bundle.Save}" update="display,:MarkListForm:MarkListTable,:growl" oncomplete="handleSubmit(args,'MarkCreateDialog');"/>
                     

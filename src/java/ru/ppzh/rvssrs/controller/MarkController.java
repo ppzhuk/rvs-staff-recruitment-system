@@ -79,6 +79,14 @@ public class MarkController implements Serializable {
     }
 
     public void create() {
+        selected.setManagerId(
+                loginController.getLoginPerson().getManager().getId()
+        );
+        try {
+            getDao().create(selected);
+        } catch (Exception ex) {
+            Logger.getLogger(MarkController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void update() {
@@ -92,6 +100,13 @@ public class MarkController implements Serializable {
     }
 
     public void destroy() {
+        try {
+            getDao().destroy(selected.getId());
+        } catch (RollbackFailureException ex) {
+            Logger.getLogger(MarkController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(MarkController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public List<Mark> getItems() {

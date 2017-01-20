@@ -186,8 +186,8 @@
                                  rowsPerPageTemplate="10,20,30,40,50"
                                  >
 
-                        <p:ajax event="rowSelect"   update="viewEditButton"/>
-                        <p:ajax event="rowUnselect" update="viewEditButton"/>
+                        <p:ajax event="rowSelect"   update="viewEditButton createButton deleteButton"/>
+                        <p:ajax event="rowUnselect" update="viewEditButton createButton deleteButton"/>
 
                         <p:column>
                             <f:facet name="header">
@@ -214,13 +214,16 @@
                             <h:outputText value="#{item.evaluatedPersonId.name}"/>
                         </p:column>
                         <f:facet name="footer">
+                            <p:commandButton id="createButton" icon="ui-icon-plus"   value="#{bundle.Create}" actionListener="#{markController.prepareCreate}" update=":MarkCreateForm" oncomplete="PF('MarkCreateDialog').show()"/>
                             <p:commandButton id="viewEditButton"   icon="ui-icon-pencil" value="View/Edit" update=":MarkEditForm" oncomplete="PF('MarkEditDialog').show()" disabled="#{empty markController.selected}"/> 
+                            <p:commandButton id="deleteButton" icon="ui-icon-trash"  value="#{bundle.Delete}" actionListener="#{markController.destroy}" update=":growl,MarkListTable" disabled="#{empty markController.selected}"/>
                         </f:facet>
                     </p:dataTable>
                 </p:panel>
             </h:form>
             
             <ui:include src="Edit_mark.xhtml"/>
+            <ui:include src="Create_mark.xhtml"/>
             
         </ui:define>
     </ui:composition>
