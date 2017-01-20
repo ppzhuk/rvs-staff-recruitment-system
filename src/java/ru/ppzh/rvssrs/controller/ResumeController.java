@@ -25,8 +25,10 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 import javax.transaction.UserTransaction;
 import ru.ppzh.rvssrs.dao.ResumeJpaController;
+import ru.ppzh.rvssrs.dao.VacancyJpaController;
 import ru.ppzh.rvssrs.dao.exceptions.RollbackFailureException;
 import ru.ppzh.rvssrs.model.Applicant;
+import ru.ppzh.rvssrs.model.Vacancy;
 
 @Named("resumeController")
 @SessionScoped
@@ -56,6 +58,15 @@ public class ResumeController implements Serializable {
         }
     }
     
+    private VacancyJpaController vacancyDao = null;
+    
+    public VacancyJpaController getVacancyDao() {
+        if (vacancyDao == null) {
+            return new VacancyJpaController(utx, emf);
+        } else {
+            return vacancyDao;
+        }
+    }
 
 
     
@@ -91,6 +102,18 @@ public class ResumeController implements Serializable {
 
     public void update() {
         try {
+            
+            if (selected.getInSearch()) {
+                Vacancy v = selected.getVacancyId();
+                if (v != null) {
+                    v.setStatus(Vacancy.STATUS_OPEN);
+                    v.setApplicantId(null);
+                    v.setCloseDate(null);
+                    getVacancyDao().edit(v);
+                }
+                selected.setVacancyId(null);
+            }
+            
             getDao().edit(selected);
         } catch (RollbackFailureException ex) {
             Logger.getLogger(VacancyController.class.getName()).log(Level.SEVERE, null, ex);

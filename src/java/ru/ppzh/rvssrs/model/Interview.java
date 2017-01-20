@@ -152,6 +152,11 @@ public class Interview implements Serializable {
     }
     
     public boolean isInterviewPassed() {
-        return date.compareTo(Vacancy.getToday()) < 1;
+        try {
+            return date.compareTo(Vacancy.getToday()) < 1;
+        } catch (Exception e) {
+            System.out.println("isInterviewPassed(): " + e.getMessage());
+            return false;
+        }
     }
 }

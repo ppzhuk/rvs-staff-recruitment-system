@@ -19,11 +19,13 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 import javax.transaction.UserTransaction;
 import ru.ppzh.rvssrs.dao.PersonJpaController;
+import ru.ppzh.rvssrs.dao.ResumeJpaController;
 import ru.ppzh.rvssrs.dao.VacancyJpaController;
 import ru.ppzh.rvssrs.dao.exceptions.RollbackFailureException;
 import ru.ppzh.rvssrs.facade.VacancyFacade;
 import ru.ppzh.rvssrs.model.Employer;
 import ru.ppzh.rvssrs.model.Person;
+import ru.ppzh.rvssrs.model.Resume;
 import ru.ppzh.rvssrs.model.Vacancy;
 
 @Named("vacancyController")
@@ -59,6 +61,17 @@ public class VacancyController implements Serializable {
             return personDao;
         }
     }
+    
+    private ResumeJpaController resumeDao = null;
+    
+    public ResumeJpaController getResumeDao() {
+        if (resumeDao == null) {
+            return new ResumeJpaController(utx, emf);
+        } else {
+            return resumeDao;
+        }
+    }
+    
     private List<Vacancy> vacancies;
     private Vacancy selected;
 
@@ -95,6 +108,17 @@ public class VacancyController implements Serializable {
         return vacancies;
     }
 
+    private boolean dismiss = false;
+
+    public boolean isDismiss() {
+        return dismiss;
+    }
+
+    public void setDismiss(boolean dismiss) {
+        this.dismiss = dismiss;
+    }
+
+    
     public void setVacancies(List<Vacancy> vacancies) {
         this.vacancies = vacancies;
     }
@@ -144,6 +168,14 @@ public class VacancyController implements Serializable {
                     loginController.getLoginPerson().getEmployer()
             );
             try {
+                
+                if (selected.getStatus() == Vacancy.STATUS_CLOSE) {
+                        Resume r = selected.getApplicantId().getResume();
+                        r.setInSearch(true);
+                        getResumeDao().edit(r);
+                        
+                }
+                
                 getDao().destroy(selected.getId());
             } catch (RollbackFailureException ex) {
                 Logger.getLogger(VacancyController.class.getName()).log(Level.SEVERE, null, ex);
@@ -156,12 +188,32 @@ public class VacancyController implements Serializable {
     }
     
     public void update() {
+        if (dismiss && !(selected.getStatus() == Vacancy.STATUS_CLOSE)) {
+                throw new IllegalStateException("dismiss id true but vacancy is not closed!");
+        }
+        
         try {
+            if (dismiss && (selected.getStatus() == Vacancy.STATUS_CLOSE)) {
+                Resume r = selected.getApplicantId().getResume();
+                r.setInSearch(true);
+                r.setVacancyId(null);
+                
+                selected.setStatus(Vacancy.STATUS_OPEN);
+                selected.setCloseDate(null);
+                selected.setApplicantId(null);
+                selected.getResumeCollection().clear();
+                
+                
+                getResumeDao().edit(r);
+            }
+            
             getDao().edit(selected);
         } catch (RollbackFailureException ex) {
             Logger.getLogger(VacancyController.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {
             Logger.getLogger(VacancyController.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            dismiss = false;
         }
     }
     

@@ -23,7 +23,14 @@
                             <f:validator validatorId="salaryValidator"/>
                         </p:inputText>
                         <h:outputText value="#{bundle.ViewVacancyLabel_status}"/>
-                        <h:outputText value="#{vacancyController.getStatus(vacancyController.selected.status)}" title="#{bundle.ViewVacancyTitle_status}"/>
+                        <h:panelGroup>
+                            <h:outputText value="#{vacancyController.getStatus(vacancyController.selected.status)}" title="#{bundle.ViewVacancyTitle_status}"/>    
+                            (
+                            <p:selectBooleanCheckbox value="#{vacancyController.dismiss}" disabled="#{vacancyController.selected.status ne 1}"/>
+                            <h:outputText value="dismiss"/>
+                            )
+                        </h:panelGroup>
+                        
                         <h:outputText value="#{bundle.ViewVacancyLabel_closeDate}"/>
                         <h:outputText value="#{vacancyController.selected.closeDate}" title="#{bundle.ViewVacancyTitle_closeDate}"/>
                         <h:outputText value="#{bundle.ViewVacancyLabel_applicantId}"/>
@@ -33,7 +40,7 @@
                         <h:outputText value="#{vacancyController.selected.employerId.companyName}" title="Company Name"/>
                     </p:panelGrid>
                     <p:commandButton actionListener="#{vacancyController.update}" value="#{bundle.Save}" update="display,:VacancyListForm:VacancyListTable,:growl" oncomplete="handleSubmit(args, 'VacancyEditDialog');"/>
-                    <p:commandButton value="#{bundle.Cancel}" onclick="VacancyEditDialog.hide()"/>
+                    
                 </h:panelGroup>
             </h:form>
         </p:dialog>

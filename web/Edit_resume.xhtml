@@ -29,12 +29,12 @@
                         <p:inputText id="description" value="#{resumeController.selected.description}" title="#{bundle.EditResumeTitle_description}" />
 
                         <h:outputText value="#{bundle.ViewResumeLabel_inSearch}"/>
-                        <p:selectBooleanCheckbox value="#{resumeController.selected.inSearch}" disabled="true"/>
+                        <p:selectBooleanCheckbox value="#{resumeController.selected.inSearch}" disabled="#{empty resumeController.selected.vacancyId}"/>
                         <h:outputText value="#{bundle.ViewResumeLabel_vacancyId}"/>
                         <h:outputText value="#{resumeController.selected.vacancyId.id}" title="#{bundle.ViewResumeTitle_vacancyId}"/>
                     </p:panelGrid>
                     <p:commandButton actionListener="#{resumeController.update}" value="#{bundle.Save}" update="display,:ResumeListForm:ResumeListTable,:growl" oncomplete="handleSubmit(args, 'ResumeEditDialog');"/>
-                    <p:commandButton value="#{bundle.Cancel}" onclick="ResumeEditDialog.hide()"/>
+                    
                 </h:panelGroup>
             </h:form>
         </p:dialog>

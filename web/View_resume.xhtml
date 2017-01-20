@@ -30,6 +30,8 @@
                         <p:selectBooleanCheckbox value="#{resumeController.selected.inSearch}" disabled="true"/>
                         <h:outputText value="#{bundle.ViewResumeLabel_vacancyId}"/>
                         <h:outputText value="#{resumeController.selected.vacancyId.id}" title="#{bundle.ViewResumeTitle_vacancyId}"/>
+                        <h:outputText value="Email"/>
+                        <h:outputText value="#{resumeController.selected.applicantId.personId.email}" title="Email"/>
                     </p:panelGrid>
                     <p:commandButton value="#{bundle.Close}" onclick="ResumeViewDialog.hide()"/>
                 </h:panelGroup>
