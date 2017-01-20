@@ -12,13 +12,13 @@
             <h:form id="InterviewEditForm">
                 <h:panelGroup id="display">
                     <p:panelGrid columns="2" rendered="#{interviewController.selected != null}">
-                        <h:outputText value="Applicant"/>
+                        <h:outputText value="Applicant:"/>
                         <h:outputText value="#{interviewController.selected.applicantId.personId.name}" />
-                        <h:outputText value="Company Name"/>
+                        <h:outputText value="Company Name:"/>
                         <h:outputText value="#{interviewController.selected.vacancyId.employerId.companyName}"/>
-                        <h:outputText value="Date"/>
+                        <h:outputText value="Date:"/>
                         <h:outputText value="#{interviewController.selected.date}" />
-                        <h:outputText value="Position"/>
+                        <h:outputText value="Position:"/>
                         <h:outputText value="#{interviewController.selected.vacancyId.position}"/>
                     </p:panelGrid>
                     <br/>

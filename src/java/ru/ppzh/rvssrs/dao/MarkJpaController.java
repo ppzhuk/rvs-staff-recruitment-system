@@ -188,4 +188,16 @@ public class MarkJpaController implements Serializable {
         }
     }
     
+    
+    public List<Mark> getMarksByManagerId(int managerId) {
+        EntityManager em = getEntityManager();
+        try {
+            Query query =
+                em.createNamedQuery("Mark.findByManagerId");
+            query.setParameter("managerId", managerId);
+            return query.getResultList();
+        } finally {
+            em.close();
+        }
+    }
 }

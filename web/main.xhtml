@@ -176,6 +176,52 @@
             <ui:include src="Create_interview.xhtml"/>
             <ui:include src="Edit_interview.xhtml"/>
             
+            <h:form id="MarkListForm" rendered="#{not empty loginController.loginPerson.manager}">
+                <p:panel header="#{bundle.ListMarkTitle}">
+                    <p:dataTable id="MarkListTable" value="#{markController.items}" var="item"
+                                 selectionMode="single" selection="#{markController.selected}"
+                                 paginator="true"
+                                 rowKey="#{item.id}"
+                                 rows="10"
+                                 rowsPerPageTemplate="10,20,30,40,50"
+                                 >
+
+                        <p:ajax event="rowSelect"   update="viewEditButton"/>
+                        <p:ajax event="rowUnselect" update="viewEditButton"/>
+
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListMarkTitle_id}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.id}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListMarkTitle_mark}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.mark}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListMarkTitle_comment}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.comment}"/>
+                        </p:column>
+                        <p:column>
+                            <f:facet name="header">
+                                <h:outputText value="#{bundle.ListMarkTitle_evaluatedPersonId}"/>
+                            </f:facet>
+                            <h:outputText value="#{item.evaluatedPersonId.name}"/>
+                        </p:column>
+                        <f:facet name="footer">
+                            <p:commandButton id="viewEditButton"   icon="ui-icon-pencil" value="View/Edit" update=":MarkEditForm" oncomplete="PF('MarkEditDialog').show()" disabled="#{empty markController.selected}"/> 
+                        </f:facet>
+                    </p:dataTable>
+                </p:panel>
+            </h:form>
+            
+            <ui:include src="Edit_mark.xhtml"/>
+            
         </ui:define>
     </ui:composition>
 

@@ -19,10 +19,12 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
 import javax.faces.convert.FacesConverter;
+import javax.inject.Inject;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 import javax.transaction.UserTransaction;
 import ru.ppzh.rvssrs.dao.MarkJpaController;
+import ru.ppzh.rvssrs.dao.exceptions.RollbackFailureException;
 
 @Named("markController")
 @SessionScoped
@@ -33,6 +35,8 @@ public class MarkController implements Serializable {
     private List<Mark> items = null;
     private Mark selected;
 
+    @Inject private LoginController loginController;
+    
     @PersistenceUnit(unitName="rvs-staff-recruitment-systemPU")
     EntityManagerFactory emf; 
     @Resource 
@@ -71,64 +75,31 @@ public class MarkController implements Serializable {
 
     public Mark prepareCreate() {
         selected = new Mark();
-        initializeEmbeddableKey();
         return selected;
     }
 
     public void create() {
-        persist(PersistAction.CREATE, ResourceBundle.getBundle("/Bundle").getString("MarkCreated"));
-        if (!JsfUtil.isValidationFailed()) {
-            items = null;    // Invalidate list of items to trigger re-query.
-        }
     }
 
     public void update() {
-        persist(PersistAction.UPDATE, ResourceBundle.getBundle("/Bundle").getString("MarkUpdated"));
+        try {
+            getDao().edit(selected);
+        } catch (RollbackFailureException ex) {
+            Logger.getLogger(MarkController.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(MarkController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public void destroy() {
-        persist(PersistAction.DELETE, ResourceBundle.getBundle("/Bundle").getString("MarkDeleted"));
-        if (!JsfUtil.isValidationFailed()) {
-            selected = null; // Remove selection
-            items = null;    // Invalidate list of items to trigger re-query.
-        }
     }
 
     public List<Mark> getItems() {
-        if (items == null) {
-            items = getFacade().findAll();
-        }
-        return items;
+        int managerId = loginController.getLoginPerson().getManager().getId();
+        return getDao().getMarksByManagerId(managerId);
     }
 
-    private void persist(PersistAction persistAction, String successMessage) {
-        if (selected != null) {
-            setEmbeddableKeys();
-            try {
-                if (persistAction != PersistAction.DELETE) {
-                    getFacade().edit(selected);
-                } else {
-                    getFacade().remove(selected);
-                }
-                JsfUtil.addSuccessMessage(successMessage);
-            } catch (EJBException ex) {
-                String msg = "";
-                Throwable cause = ex.getCause();
-                if (cause != null) {
-                    msg = cause.getLocalizedMessage();
-                }
-                if (msg.length() > 0) {
-                    JsfUtil.addErrorMessage(msg);
-                } else {
-                    JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
-                }
-            } catch (Exception ex) {
-                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
-                JsfUtil.addErrorMessage(ex, ResourceBundle.getBundle("/Bundle").getString("PersistenceErrorOccured"));
-            }
-        }
-    }
-
+   
     public Mark getMark(java.lang.Integer id) {
         return getFacade().find(id);
     }

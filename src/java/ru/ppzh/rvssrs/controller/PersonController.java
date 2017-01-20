@@ -51,6 +51,17 @@ public class PersonController implements Serializable {
     public PersonController() {
     }
     
+    private List<Person> evaluatedPersons;
+
+    public List<Person> getEvaluatedPersons() {
+        return getDao().findEvaluatedPersons();
+    }
+
+    public void setEvaluatedPersons(List<Person> evaluatedPersons) {
+        this.evaluatedPersons = evaluatedPersons;
+    }
+
+    
     public String getFirstPersonName() {
         return getDao().findPerson(1).getName();
     }

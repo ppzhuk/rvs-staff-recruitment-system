@@ -366,4 +366,15 @@ public class PersonJpaController implements Serializable {
             em.close();
         }
     }
+    
+    public List<Person> findEvaluatedPersons() {
+        EntityManager em = getEntityManager();
+        try {
+            Query query =
+                em.createNamedQuery("Person.findEvaluatedPersons");
+            return query.getResultList();
+        } finally {
+            em.close();
+        }
+    }
 }

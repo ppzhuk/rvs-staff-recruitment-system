@@ -40,7 +40,8 @@ import javax.validation.constraints.Size;
     , @NamedQuery(name = "Person.findByPhoneNumber", query = "SELECT p FROM Person p WHERE p.phoneNumber = :phoneNumber")
     , @NamedQuery(name = "Person.findByLogin", query = "SELECT p FROM Person p WHERE p.login = :login")
     , @NamedQuery(name = "Person.findByPassword", query = "SELECT p FROM Person p WHERE p.password = :password")
-    , @NamedQuery(name = "Person.findByLoginAndPass", query = "SELECT p FROM Person p WHERE p.password = :password AND p.login = :login")})
+    , @NamedQuery(name = "Person.findByLoginAndPass", query = "SELECT p FROM Person p WHERE p.password = :password AND p.login = :login")
+    , @NamedQuery(name = "Person.findEvaluatedPersons", query = "SELECT p FROM Person p WHERE p.manager = NULL")})
 public class Person implements Serializable {
 
     private static final long serialVersionUID = 1L;
