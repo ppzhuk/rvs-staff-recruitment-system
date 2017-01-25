@@ -5,6 +5,8 @@
  */
 package ru.ppzh.rvssrs.facade;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -27,6 +29,17 @@ public class ApplicantFacade extends AbstractFacade<Applicant> {
 
     public ApplicantFacade() {
         super(Applicant.class);
+    }
+    
+    public List<Applicant> getFreeApplicants() {
+       List<Applicant> list = findAll();
+       List<Applicant> newList = new ArrayList<>();
+       for (Applicant a: list) {
+           if (a.getResumeCollection().iterator().next().getInSearch()) {
+               newList.add(a);
+           }
+       }
+       return newList;
     }
     
 }

@@ -8,6 +8,8 @@ package ru.ppzh.rvssrs.facade;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import ru.ppzh.rvssrs.model.Applicant;
+import ru.ppzh.rvssrs.model.Employer;
 import ru.ppzh.rvssrs.model.Interview;
 
 /**
@@ -29,4 +31,21 @@ public class InterviewFacade extends AbstractFacade<Interview> {
         super(Interview.class);
     }
     
+    public boolean isSetEmployerResultDisabled(Interview selected, Applicant loginPerson) {
+        if (selected == null) {
+            return true;
+        }
+        return selected.getEmployerResult() != Interview.RESULT_UNDEFINED ||
+                !selected.isInterviewPassed() || 
+                loginPerson != null;
+    }
+    
+    public boolean isSetAplicantResultDisabled(Interview selected, Employer loginPerson) {
+        if (selected == null) {
+            return true;
+        }
+        return selected.getApplicantResult() != Interview.RESULT_UNDEFINED ||
+                !selected.isInterviewPassed() || 
+                loginPerson != null;
+    }
 }
